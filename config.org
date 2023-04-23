@@ -90,3 +90,8 @@ Refresh dired when files change
   (setq global-auto-revert-non-file-buffers t) 
 #+end_src
 
+When opening a symlink, follow the symlink to edit
+the actual file.
+#+begin_src emacs-lisp
+  (setq vc-follow-symlinks t)
+#+end_src
