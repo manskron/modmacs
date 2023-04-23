@@ -60,37 +60,45 @@
 
 * Misc settings
 
+*** Font size
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
     :height 150)
 #+end_src
 
-Start with a scratch buffer
+*** Start with a scratch buffer
  #+begin_src emacs-lisp
   (setq inhibit-startup-message t)
 #+end_src
 
-Highlight active line
+*** Disable Menubar, Toolbars and Scrollbars
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
+*** Highlight active line
 #+begin_src emacs-lisp
   (hl-line-mode t)
 #+end_src
 
-Show line numbers
+*** Show line numbers
 #+begin_src emacs-lisp
   (global-display-line-numbers-mode 1)
 #+end_src
 
-Prevent UI dialogs, stick to text
+*** Prevent UI dialogs, stick to text
 #+begin_src emacs-lisp
   (setq use-dialog-box nil)
 #+end_src
 
-Refresh buffer if the underlying file changes
+*** Refresh buffer if the underlying file changes
 #+begin_src emacs-lisp
   (global-auto-revert-mode 1) 
 #+end_src
 
-Refresh dired when files change
+*** Refresh dired when files change
 #+begin_src emacs-lisp
   (setq global-auto-revert-non-file-buffers t) 
 #+end_src
