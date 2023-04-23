@@ -28,6 +28,10 @@
     :config
     (evil-mode 1))
 #+end_src
+** magit
+#+begin_src emacs-lisp
+  (use-package magit)
+#+end_src
 
 ** general
 #+begin_src emacs-lisp
@@ -72,6 +76,7 @@
     "b" '(:which-key "Buffers")
     "e" '(eshell :which-key "Eshell")
     "f" '(:which-key "File")
+    "g" '(:which-key "Magit")
   )
 #+end_src
 
@@ -93,6 +98,13 @@
      "f s"   '(save-buffer :which-key "Save file")
      "f S"   '(write-file :which-key "Save file as...")
      "f c"   '((lambda () (interactive) (find-file "~/modmacs/config.org")) :which-key: "Config")
+  )
+#+end_src
+
+*** Files
+#+begin_src emacs-lisp
+  (nvmap :states '(normal visual) :keymaps 'override :prefix "SPC"
+     "g s"   '(magit-status :which-key "Status")
   )
 #+end_src
 
