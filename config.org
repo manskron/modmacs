@@ -139,6 +139,14 @@ We want the same syntax highlighting in source blocks as in the native language 
     org-edit-src-content-indentation 0)
 #+end_src
 
+** Enable evaluating code blocks
+#+begin_src emacs-lisp
+;; active Babel languages
+(org-babel-do-load-languages
+'org-babel-load-languages
+'((shell . t)))
+#+end_src
+
 * Misc settings
 Font size
 #+begin_src emacs-lisp
@@ -187,4 +195,3 @@ Restore last cursor location in previously opened files
 #+begin_src emacs-lisp
   (save-place-mode 1)
 #+end_src
-
