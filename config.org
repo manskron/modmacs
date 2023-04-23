@@ -26,8 +26,8 @@
 ** evil
 #+begin_src emacs-lisp
   (use-package evil
-  :config
-  (evil-mode 1))
+    :config
+    (evil-mode 1))
 #+end_src
 
 ** lsp-mode
@@ -38,18 +38,18 @@
 ** Vertico
 #+begin_src emacs-lisp
   (use-package vertico
-  :init
-  (vertico-mode))
+    :init
+    (vertico-mode))
 #+end_src
 
 ** which-key
 #+begin_src emacs-lisp
   (use-package which-key
-  :init
-  (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.3))
+    :init
+    (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.3))
 #+end_src
 
 * Theme
@@ -60,8 +60,13 @@
 
 * Misc settings
 
-Start with a scratch buffer
 #+begin_src emacs-lisp
+  (set-face-attribute 'default nil
+    :height 150)
+#+end_src
+
+Start with a scratch buffer
+ #+begin_src emacs-lisp
   (setq inhibit-startup-message t)
 #+end_src
 
@@ -88,10 +93,4 @@ Refresh buffer if the underlying file changes
 Refresh dired when files change
 #+begin_src emacs-lisp
   (setq global-auto-revert-non-file-buffers t) 
-#+end_src
-
-When opening a symlink, follow the symlink to edit
-the actual file.
-#+begin_src emacs-lisp
-  (setq vc-follow-symlinks t)
 #+end_src
