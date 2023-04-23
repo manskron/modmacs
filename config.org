@@ -1,0 +1,95 @@
+* Modsmacs
+
+** Package manager
+#+begin_src emacs-lisp
+  (require 'package)
+
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			  ("melpa-stable" . "https://stable.melpa.org/packages/")
+			  ("org" . "https://orgmode.org/elpa/")
+			  ("elpa" . "https://elpa.gnu.org/packages/")))
+
+  (package-initialize)
+  (package-refresh-contents)
+
+  ;; Initialize use-package on non-Linux platforms
+  (unless (package-installed-p 'use-package)
+      (package-install 'use-package))
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+#+end_src
+
+** Packages
+
+*** org
+#+begin_src emacs-lisp
+  (use-package org)
+#+end_src
+
+*** evil
+#+begin_src emacs-lisp
+  (use-package evil
+  :config
+  (evil-mode 1)
+#+end_src
+
+*** lsp-mode
+#+begin_src emacs-lisp
+  (use-package lsp-mode)
+#+end_src
+
+*** Vertico
+#+begin_src emacs-lisp
+  (use-package vertico
+  :init
+  (vertico-mode))
+#+end_src
+
+*** which-key
+#+begin_src emacs-lisp
+  (use-package which-key
+  :init
+  (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
+#+end_src
+
+** Theme
+
+#+begin_src emacs-lisp
+  (load-theme 'modus-vivendi t)
+#+end_src
+
+** Misc general settings
+
+Start with a scratch buffer
+#+begin_src emacs-lisp
+  (setq inhibit-startup-message t)
+#+end_src
+
+Highlight active line
+#+begin_src emacs-lisp
+  (hl-line-mode t)
+#+end_src
+
+Show line numbers
+#+begin_src emacs-lisp
+  (global-display-line-numbers-mode 1)
+#+end_src
+
+Prevent UI dialogs, stick to text
+#+begin_src emacs-lisp
+  (setq use-dialog-box nil)
+#+end_src
+
+Refresh buffer if the underlying file changes
+#+begin_src emacs-lisp
+  (global-auto-revert-mode 1) 
+#+end_src
+
+Refresh dired when files change
+#+begin_src emacs-lisp
+  (setq global-auto-revert-non-file-buffers t) 
+#+end_src
+
