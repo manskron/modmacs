@@ -17,7 +17,6 @@
 #+end_src
 
 * Packages
-
 ** org
 #+begin_src emacs-lisp
   (use-package org)
@@ -79,7 +78,7 @@
 *** Buffers
 #+begin_src emacs-lisp
   (nvmap :states '(normal visual) :keymaps 'override :prefix "SPC"
-     "b f"   '(list-buffers :which-key "List buffers")
+     "b b"   '(list-buffers :which-key "List buffers")
   )
 #+end_src
 
