@@ -10,7 +10,6 @@
 			  ("elpa" . "https://elpa.gnu.org/packages/")))
 
   (package-initialize)
-  (package-refresh-contents)
 
   ;; Initialize use-package on non-Linux platforms
   (unless (package-installed-p 'use-package)
@@ -30,7 +29,7 @@
 #+begin_src emacs-lisp
   (use-package evil
   :config
-  (evil-mode 1)
+  (evil-mode 1))
 #+end_src
 
 *** lsp-mode
