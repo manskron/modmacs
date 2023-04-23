@@ -78,7 +78,10 @@
 *** Buffers
 #+begin_src emacs-lisp
   (nvmap :states '(normal visual) :keymaps 'override :prefix "SPC"
-     "b b"   '(list-buffers :which-key "List buffers")
+     "b b"   '(switch-to-buffer :which-key "List")
+     "b k"   '(kill-buffer :which-key "Kill")
+     "b l"   '(next-buffer :which-key "Next")
+     "b h"   '(previous-buffer :which-key "Next")
   )
 #+end_src
 
