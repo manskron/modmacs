@@ -1,6 +1,4 @@
-* Modsmacs
-
-** Package manager
+* Package manager
 #+begin_src emacs-lisp
   (require 'package)
 
@@ -18,33 +16,33 @@
   (setq use-package-always-ensure t)
 #+end_src
 
-** Packages
+* Packages
 
-*** org
+** org
 #+begin_src emacs-lisp
   (use-package org)
 #+end_src
 
-*** evil
+** evil
 #+begin_src emacs-lisp
   (use-package evil
   :config
   (evil-mode 1))
 #+end_src
 
-*** lsp-mode
+** lsp-mode
 #+begin_src emacs-lisp
   (use-package lsp-mode)
 #+end_src
 
-*** Vertico
+** Vertico
 #+begin_src emacs-lisp
   (use-package vertico
   :init
   (vertico-mode))
 #+end_src
 
-*** which-key
+** which-key
 #+begin_src emacs-lisp
   (use-package which-key
   :init
@@ -54,13 +52,13 @@
   (setq which-key-idle-delay 0.3))
 #+end_src
 
-** Theme
+* Theme
 
 #+begin_src emacs-lisp
   (load-theme 'modus-vivendi t)
 #+end_src
 
-** Misc general settings
+* Misc settings
 
 Start with a scratch buffer
 #+begin_src emacs-lisp
