@@ -86,6 +86,7 @@
 #+begin_src emacs-lisp
   (nvmap :states '(normal visual) :keymaps 'override :prefix "SPC"
      "f f"   '(find-file :which-key "Find file")
+     "f r"   '(recentf-open-files :which-key "Recent file")
      "f s"   '(save-buffer :which-key "Save file")
      "f S"   '(write-file :which-key "Save file as...")
      "f c"   '((lambda () (interactive) (find-file "~/modmacs/config.org")) :which-key: "Config")
@@ -93,7 +94,6 @@
 #+end_src
 
 * Misc settings
-
 *** Font size
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
@@ -122,11 +122,6 @@
   (global-display-line-numbers-mode 1)
 #+end_src
 
-*** Prevent UI dialogs, stick to text
-#+begin_src emacs-lisp
-  (setq use-dialog-box nil)
-#+end_src
-
 *** Refresh buffer if the underlying file changes
 #+begin_src emacs-lisp
   (global-auto-revert-mode 1) 
@@ -136,3 +131,14 @@
 #+begin_src emacs-lisp
   (setq global-auto-revert-non-file-buffers t) 
 #+end_src
+
+*** Enable recent files
+#+begin_src emacs-lisp
+  (recentf-mode 1)
+#+end_src
+
+*** Restore last cursor location in previously opened files
+#+begin_src emacs-lisp
+  (save-place-mode 1)
+#+end_src
+
