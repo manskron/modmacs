@@ -108,51 +108,82 @@
   )
 #+end_src
 
+* Org
+** Source Code Block Tag Expansion
+Org-tempo is a package that allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
+
+| Typing the below + TAB | Expands to ...                          |
+|------------------------+-----------------------------------------|
+| <a                     | '#+BEGIN_EXPORT ascii' … '#+END_EXPORT  |
+| <c                     | '#+BEGIN_CENTER' … '#+END_CENTER'       |
+| <C                     | '#+BEGIN_COMMENT' … '#+END_COMMENT'     |
+| <e                     | '#+BEGIN_EXAMPLE' … '#+END_EXAMPLE'     |
+| <E                     | '#+BEGIN_EXPORT' … '#+END_EXPORT'       |
+| <h                     | '#+BEGIN_EXPORT html' … '#+END_EXPORT'  |
+| <l                     | '#+BEGIN_EXPORT latex' … '#+END_EXPORT' |
+| <q                     | '#+BEGIN_QUOTE' … '#+END_QUOTE'         |
+| <s                     | '#+BEGIN_SRC' … '#+END_SRC'             |
+| <v                     | '#+BEGIN_VERSE' … '#+END_VERSE'         |
+
+#+begin_src emacs-lisp
+(use-package org-tempo
+  :ensure nil) ;; tell use-package not to try to install org-tempo since it's already there.
+#+end_src
+
+** Source Code Block Syntax Highlighting
+We want the same syntax highlighting in source blocks as in the native language files.
+#+begin_src emacs-lisp
+(setq org-src-fontify-natively t
+    org-src-tab-acts-natively t
+    org-confirm-babel-evaluate nil
+    org-edit-src-content-indentation 0)
+#+end_src
+
 * Misc settings
-*** Font size
+Font size
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
     :height 150)
 #+end_src
 
-*** Start with a scratch buffer
+Start with a scratch buffer
  #+begin_src emacs-lisp
   (setq inhibit-startup-message t)
 #+end_src
 
-*** Disable Menubar, Toolbars and Scrollbars
+Disable Menubar, Toolbars and Scrollbars
 #+begin_src emacs-lisp
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
 #+end_src
 
-*** Highlight active line
+Highlight active line
 #+begin_src emacs-lisp
   (hl-line-mode t)
 #+end_src
 
-*** Show line numbers
+Show line numbers
 #+begin_src emacs-lisp
   (global-display-line-numbers-mode 1)
 #+end_src
 
-*** Refresh buffer if the underlying file changes
+Refresh buffer if the underlying file changes
 #+begin_src emacs-lisp
   (global-auto-revert-mode 1) 
 #+end_src
 
-*** Refresh dired when files change
+Refresh dired when files change
 #+begin_src emacs-lisp
   (setq global-auto-revert-non-file-buffers t) 
 #+end_src
 
-*** Enable recent files
+Enable recent files
 #+begin_src emacs-lisp
   (recentf-mode 1)
 #+end_src
 
-*** Restore last cursor location in previously opened files
+Restore last cursor location in previously opened files
 #+begin_src emacs-lisp
   (save-place-mode 1)
 #+end_src
