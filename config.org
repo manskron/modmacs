@@ -64,7 +64,7 @@
   (mods/leader-keys
 
     ;;Shell
-    "SPC" '(eshell :which-key "eshell")
+    "SPC" '(execute-extended-command :which-key "M-x")
 
     ;;Buffers
     "b"   '(:ignore t :which-key "buffers")
@@ -73,6 +73,9 @@
     "b l" '(next-buffer :which-key "next")
     "b h" '(previous-buffer :which-key "prev")
     "b s" '(consult-line :which-key "search")
+
+    ;;Eshell
+    "e" '(eshell :which-key "eshell")
 
     ;;Files
     "f"   '(:ignore t :which-key "files")
@@ -96,7 +99,8 @@
 
     ;;Toggles
     "t"   '(:ignore t :which-key "toggles")
-    "t t" '(modus-themes-toggle :which-key "light/dark")))
+    "t t" '(modus-themes-toggle :which-key "light/dark")
+    ))
 
     ;; Make TAB work as expected in org-mode
     (general-define-key
