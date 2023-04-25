@@ -258,3 +258,8 @@ Restore last cursor location in previously opened files
 #+begin_src emacs-lisp
   (save-place-mode 1)
 #+end_src
+
+Start in fullscreen
+#+begin_src emacs-lisp
+(add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+#+end_src
