@@ -78,6 +78,7 @@
     "b h" '(previous-buffer :which-key "Previous buffer")
     "b s" '(consult-line :which-key "Search in buffer")
 
+    ;;Code
     "c"   '(:ignore t :which-key "Code")
     "c c" '(comment-line :which-key "Comment line")
 
