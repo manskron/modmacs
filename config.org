@@ -66,23 +66,30 @@
     :global-prefix "C-SPC")
 
   (mods/leader-keys
+
+    ;Shell
     "SPC" '(eshell :which-key "eshell")
+
+    ;Buffers
     "b"   '(:ignore t :which-key "buffers")
     "b b" '(switch-to-buffer :which-key "list")
     "b k" '(kill-buffer :which-key "kill")
     "b l" '(next-buffer :which-key "next")
     "b h" '(previous-buffer :which-key "prev")
+
+    ;Files
     "f"   '(:ignore t :which-key "files")
     "f f" '(find-file :which-key "find")
     "f r" '(recentf-open-files :which-key "recent")
     "f s" '(save-buffer :which-key "save")
     "f S" '(write-file :which-key "save as...")
     "f c" '((lambda () (interactive) (find-file "~/modmacs/config.org")) :which-key: "config.org")
+
+    ;Git
     "g"   '(magit-status :which-key "magit")))
 #+end_src
 
 * Theme
-
 #+begin_src emacs-lisp
   (load-theme 'modus-operandi t)
 #+end_src
