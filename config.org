@@ -71,39 +71,56 @@
     "SPC" '(execute-extended-command :which-key "M-x")
 
     ;;Buffers
-    "b"   '(:ignore t :which-key "buffers")
-    "b b" '(consult-buffer :which-key "list")
-    "b k" '(kill-buffer :which-key "kill")
-    "b l" '(next-buffer :which-key "next")
-    "b h" '(previous-buffer :which-key "prev")
-    "b s" '(consult-line :which-key "search")
+    "b"   '(:ignore t :which-key "Buffer")
+    "b b" '(consult-buffer :which-key "List buffers")
+    "b k" '(kill-buffer :which-key "Kill buffer")
+    "b l" '(next-buffer :which-key "Next buffer")
+    "b h" '(previous-buffer :which-key "Previous buffer")
+    "b s" '(consult-line :which-key "Search in buffer")
+
+    "c"   '(:ignore t :which-key "Code")
+    "c c" '(comment-line :which-key "Comment line")
 
     ;;Eshell
-    "e" '(eshell :which-key "eshell")
+    "e" '(eshell :which-key "Eshell")
 
     ;;Files
-    "f"   '(:ignore t :which-key "files")
-    "f f" '(find-file :which-key "find")
-    "f r" '(recentf-open-files :which-key "recent")
-    "f s" '(save-buffer :which-key "save")
-    "f S" '(write-file :which-key "save as...")
-    "f c" '((lambda () (interactive) (find-file "~/modmacs/config.org")) :which-key: "config.org")
+    "f"   '(:ignore t :which-key "File")
+    "f f" '(find-file :which-key "Open file")
+    "f r" '(recentf-open-files :which-key "Open recent")
+    "f s" '(save-buffer :which-key "Save")
+    "f S" '(write-file :which-key "Save as...")
+    "f c" '((lambda () (interactive) (find-file "~/modmacs/config.org")) :which-key: "Open config.org")
 
     ;;Git
-    "g"   '(magit-status :which-key "magit")
+    "g"   '(magit-status :which-key "Magit")
 
     ;;Org
-    "o"   '(:ignore t :which-key "org")
-    "o h"   '(consult-org-heading :which-key "Jump to heading")
+    "o"   '(:ignore t :which-key "Org")
+    "o j"   '(consult-org-heading :which-key "Jump to heading")
 
     ;;Project
     "p"   '(:ignore t :which-key "project")
-    "p s"   '(consult-grep :which-key "search")
-    "p f"   '(consult-find :which-key "search")
+    "p p"   '(projectile-switch-project :which-key "Open project")
+    "p d"   '(projectile-dired :which-key "Open dired at project root")
+    
 
     ;;Toggles
-    "t"   '(:ignore t :which-key "toggles")
-    "t t" '(modus-themes-toggle :which-key "light/dark")
+    "t"   '(:ignore t :which-key "Toggle")
+    "t t" '(modus-themes-toggle :which-key "Theme light/dark")
+    "t l" '(global-display-line-numbers-mode :which-key "Line numbers")
+
+    ;; Windows 
+    "w"   '(:ignore t :which-key "Window")
+    "w c"   '(evil-window-delete :which-key "Close window")
+    "w -"   '(evil-window-split :which-key "Horizontal split window")
+    "w /"   '(evil-window-vsplit :which-key "Vertical split window")
+    "w h"   '(evil-window-left :which-key "Window left")
+    "w j"   '(evil-window-down :which-key "Window down")
+    "w k"   '(evil-window-up :which-key "Window up")
+    "w l"   '(evil-window-right :which-key "Window right")
+    "w w"   '(evil-window-next :which-key "Cycle")
+
     ))
 
     ;; Make TAB work as expected in org-mode
@@ -136,7 +153,8 @@
      (bg-line-number-active unspecified) 
      ;; Remove the border
      (border-mode-line-active unspecified)
-     (border-mode-line-inactive unspecified)))
+     (border-mode-line-inactive unspecified)
+     ))
 
 (use-package solar
   :ensure nil
@@ -150,7 +168,6 @@
   (setq circadian-themes '((:sunrise . modus-operandi)
                            (:sunset  . modus-vivendi)))
   (circadian-setup))
-
 #+end_src
 
 * Org
