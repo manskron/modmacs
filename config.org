@@ -101,7 +101,7 @@
   )
 #+end_src
 
-*** Files
+*** Magit
 #+begin_src emacs-lisp
   (nvmap :states '(normal visual) :keymaps 'override :prefix "SPC"
      "g s"   '(magit-status :which-key "Status")
