@@ -28,16 +28,10 @@
     :config
     (evil-mode 1))
 #+end_src
+
 ** magit
 #+begin_src emacs-lisp
   (use-package magit)
-#+end_src
-
-** general
-#+begin_src emacs-lisp
-(use-package general
-  :config
-  (general-evil-setup t))
 #+end_src
 
 ** lsp-mode
@@ -65,48 +59,11 @@
 * Theme
 
 #+begin_src emacs-lisp
-  (load-theme 'modus-vivendi t)
+  (load-theme 'modus-operandi t)
 #+end_src
 
-* Keybindings
-*** General
-#+begin_src emacs-lisp
-  (nvmap :keymaps 'override :prefix "SPC"
-    "SPC"   '(execute-extended-command :which-key "M-x")
-    "b" '(:which-key "Buffers")
-    "e" '(eshell :which-key "Eshell")
-    "f" '(:which-key "File")
-    "g" '(:which-key "Magit")
-  )
-#+end_src
-
-*** Buffers
-#+begin_src emacs-lisp
-  (nvmap :states '(normal visual) :keymaps 'override :prefix "SPC"
-     "b b"   '(switch-to-buffer :which-key "List")
-     "b k"   '(kill-buffer :which-key "Kill")
-     "b l"   '(next-buffer :which-key "Next")
-     "b h"   '(previous-buffer :which-key "Next")
-  )
-#+end_src
-
-*** Files
-#+begin_src emacs-lisp
-  (nvmap :states '(normal visual) :keymaps 'override :prefix "SPC"
-     "f f"   '(find-file :which-key "Find file")
-     "f r"   '(recentf-open-files :which-key "Recent file")
-     "f s"   '(save-buffer :which-key "Save file")
-     "f S"   '(write-file :which-key "Save file as...")
-     "f c"   '((lambda () (interactive) (find-file "~/modmacs/config.org")) :which-key: "Config")
-  )
-#+end_src
-
-*** Magit
-#+begin_src emacs-lisp
-  (nvmap :states '(normal visual) :keymaps 'override :prefix "SPC"
-     "g s"   '(magit-status :which-key "Status")
-  )
-#+end_src
+#+RESULTS:
+: t
 
 * Org
 ** Source Code Block Tag Expansion
