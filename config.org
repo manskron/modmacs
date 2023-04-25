@@ -121,7 +121,8 @@
      ;; Make the active mode line a fine shade of lavender
      ;; (purple) and tone down the gray of the inactive mode
      ;; lines.
-     '((bg-mode-line-active bg-lavender)
+     '(
+     (bg-mode-line-active bg-lavender)
      (border-mode-line-active bg-lavender)
      (bg-mode-line-inactive bg-dim)
      (border-mode-line-inactive bg-inactive)
