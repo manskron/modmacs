@@ -17,37 +17,21 @@
 #+end_src
 
 * Packages
-** org
 #+begin_src emacs-lisp
   (use-package org)
-#+end_src
 
-** evil
-#+begin_src emacs-lisp
   (use-package evil
     :config
     (evil-mode 1))
-#+end_src
 
-** magit
-#+begin_src emacs-lisp
   (use-package magit)
-#+end_src
 
-** lsp-mode
-#+begin_src emacs-lisp
   (use-package lsp-mode)
-#+end_src
 
-** Vertico
-#+begin_src emacs-lisp
   (use-package vertico
     :init
     (vertico-mode))
-#+end_src
 
-** which-key
-#+begin_src emacs-lisp
   (use-package which-key
     :init
     (which-key-mode)
@@ -56,7 +40,7 @@
     (setq which-key-idle-delay 0.3))
 #+end_src
 
-* Keymaps
+* Keymappings
 #+begin_src emacs-lisp
 (use-package general
   :config
@@ -94,9 +78,6 @@
   (load-theme 'modus-operandi t)
 #+end_src
 
-#+RESULTS:
-: t
-
 * Org
 ** Source Code Block Tag Expansion
 Org-tempo is a package that allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
@@ -119,7 +100,7 @@ Org-tempo is a package that allows for '<s' followed by TAB to expand to a begin
   :ensure nil) ;; tell use-package not to try to install org-tempo since it's already there.
 #+end_src
 
-** Source Code Block Syntax Highlighting
+*** Source Code Block Syntax Highlighting
 We want the same syntax highlighting in source blocks as in the native language files.
 #+begin_src emacs-lisp
 (setq org-src-fontify-natively t
@@ -128,7 +109,7 @@ We want the same syntax highlighting in source blocks as in the native language 
     org-edit-src-content-indentation 0)
 #+end_src
 
-** Enable evaluating code blocks
+*** Enable evaluating code blocks
 #+begin_src emacs-lisp
 ;; active Babel languages
 (org-babel-do-load-languages
