@@ -70,6 +70,9 @@
     ;;Shell
     "SPC" '(execute-extended-command :which-key "M-x")
 
+    ;;Shell
+    "!" '(term :which-key "term")
+
     ;;Buffers
     "b"   '(:ignore t :which-key "Buffer")
     "b b" '(consult-buffer :which-key "List buffers")
