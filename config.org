@@ -63,10 +63,10 @@
 
   (mods/leader-keys
 
-    ;Shell
+    ;;Shell
     "SPC" '(eshell :which-key "eshell")
 
-    ;Buffers
+    ;;Buffers
     "b"   '(:ignore t :which-key "buffers")
     "b b" '(consult-buffer :which-key "list")
     "b k" '(kill-buffer :which-key "kill")
@@ -74,7 +74,7 @@
     "b h" '(previous-buffer :which-key "prev")
     "b s" '(consult-line :which-key "search")
 
-    ;Files
+    ;;Files
     "f"   '(:ignore t :which-key "files")
     "f f" '(find-file :which-key "find")
     "f r" '(recentf-open-files :which-key "recent")
@@ -82,21 +82,27 @@
     "f S" '(write-file :which-key "save as...")
     "f c" '((lambda () (interactive) (find-file "~/modmacs/config.org")) :which-key: "config.org")
 
-    ;Git
+    ;;Git
     "g"   '(magit-status :which-key "magit")
 
-    ;Org
+    ;;Org
     "o"   '(:ignore t :which-key "org")
     "o h"   '(consult-org-heading :which-key "Jump to heading")
 
-    ;Project
+    ;;Project
     "p"   '(:ignore t :which-key "project")
     "p s"   '(consult-grep :which-key "search")
     "p f"   '(consult-find :which-key "search")
 
-    ;Toggles
+    ;;Toggles
     "t"   '(:ignore t :which-key "toggles")
     "t t" '(modus-themes-toggle :which-key "light/dark")))
+
+    ;; Make TAB work as expected in org-mode
+    (general-define-key
+    :states 'normal
+    :keymaps 'org-mode-map
+    "TAB" 'org-cycle)
 #+end_src
 
 * Theme
@@ -139,7 +145,7 @@
 #+end_src
 
 * Org
-** Source Code Block Tag Expansion
+*** Source Code Block Tag Expansion
 Org-tempo is a package that allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
 
 | Typing the below + TAB | Expands to ...                          |
