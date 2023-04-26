@@ -4,16 +4,16 @@
 (require 'package)
 
 (setq package-archives
-    '(("melpa" . "https://melpa.org/packages/")
-    ("melpa-stable" . "https://stable.melpa.org/packages/")
-    ("org" . "https://orgmode.org/elpa/")
-    ("elpa" . "https://elpa.gnu.org/packages/")))
+      '(("melpa" . "https://melpa.org/packages/")
+	("melpa-stable" . "https://stable.melpa.org/packages/")
+	("org" . "https://orgmode.org/elpa/")
+	("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
+  (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
 #+end_src
@@ -24,47 +24,47 @@
 (use-package org)
 
 (use-package evil
-    :config
-    (evil-mode 1))
+  :config
+  (evil-mode 1))
 
 (use-package projectile
-    :config
-    (projectile-mode +1))
+  :config
+  (projectile-mode +1))
 
 (use-package magit)
 
 (use-package lsp-mode)
 
 (use-package orderless
-    :ensure t
-    :custom
-    (completion-styles '(orderless basic))
-    (completion-category-overrides '((file (styles basic partial-completion)))))
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package consult)
 
 (use-package marginalia
-    :init
-    (marginalia-mode))
+  :init
+  (marginalia-mode))
 
 (use-package vertico
-    :init
-    (vertico-mode))
+  :init
+  (vertico-mode))
 
 (use-package which-key
-    :init
-    (which-key-mode)
-    :diminish which-key-mode
-    :config
-    (setq which-key-idle-delay 0.3))
+  :init
+  (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
 #+end_src
 
 * Keymappings
 
 #+begin_src emacs-lisp
 (use-package general
-    :config
-    (general-create-definer mods/leader-keys
+  :config
+  (general-create-definer mods/leader-keys
     :keymaps '(normal insert visual emacs)
     :prefix "SPC"
     :global-prefix "C-SPC")
@@ -76,6 +76,9 @@
 
     ;;Shell
     "!"		'(term :which-key "term")
+
+    ;;Eshell
+    ";"		'(eshell :which-key "eshell")
 
     ;;Buffers
     "b"		'(:ignore t :which-key "Buffer")
@@ -90,8 +93,10 @@
     "c"		'(:ignore t :which-key "Code")
     "c c"	'(comment-line :which-key "Comment line")
 
-    ;;Eshell
-    "e"		'(eshell :which-key "Eshell")
+    ;;Elisp
+    "e"		'(:ignore t :which-key "Elisp")
+    "e e"	'(eval-last-sexp :which-key "eval-last-sexp")
+    "e f"	'(indent-pp-sexp :which-key "Format")
 
     ;;Files
     "f"		'(:ignore t :which-key "File")
@@ -135,50 +140,50 @@
 
 ;; Make TAB work as expected in org-mode
 (general-define-key
-    :states 'normal
-    :keymaps 'org-mode-map
-    "TAB" 'org-cycle)
+ :states 'normal
+ :keymaps 'org-mode-map
+ "TAB" 'org-cycle)
 #+end_src
 
 * Theme
 
 #+begin_src emacs-lisp
 (setq modus-themes-org-blocks 'gray-background
-    modus-themes-mixed-fonts t)
+      modus-themes-mixed-fonts t)
 (setq modus-themes-common-palette-overrides
-    '(
-    ;; Make the active mode line a fine shade of lavender
-    ;; (purple) and tone down the gray of the inactive mode
-    ;; lines.
-    (bg-mode-line-active bg-lavender)
-    (border-mode-line-active bg-lavender)
-    (bg-mode-line-inactive bg-dim)
-    (border-mode-line-inactive bg-inactive)
-    ;; Hide fringe
-    (fringe unspecified)
-    ;; Make line numbers less intense and add a shade of cyan
-    ;; for the current line number.
-    (fg-line-number-inactive "gray50")
-    (fg-line-number-active cyan-cooler)
-    (bg-line-number-inactive unspecified)
-    (bg-line-number-active unspecified) 
-    ;; Remove the border
-    (border-mode-line-active unspecified)
-    (border-mode-line-inactive unspecified)
-    ))
+      '(
+	;; Make the active mode line a fine shade of lavender
+	;; (purple) and tone down the gray of the inactive mode
+	;; lines.
+	(bg-mode-line-active bg-lavender)
+	(border-mode-line-active bg-lavender)
+	(bg-mode-line-inactive bg-dim)
+	(border-mode-line-inactive bg-inactive)
+	;; Hide fringe
+	(fringe unspecified)
+	;; Make line numbers less intense and add a shade of cyan
+	;; for the current line number.
+	(fg-line-number-inactive "gray50")
+	(fg-line-number-active cyan-cooler)
+	(bg-line-number-inactive unspecified)
+	(bg-line-number-active unspecified) 
+	;; Remove the border
+	(border-mode-line-active unspecified)
+	(border-mode-line-inactive unspecified)
+	))
 
 (use-package solar
-    :ensure nil
-    :config
-    (setq calendar-latitude 59.33
+  :ensure nil
+  :config
+  (setq calendar-latitude 59.33
 	calendar-longitude 18.06))
 
 (use-package circadian
-    :after solar
-    :config
-    (setq circadian-themes '((:sunrise . modus-operandi)
-			    (:sunset  . modus-vivendi)))
-    (circadian-setup))
+  :after solar
+  :config
+  (setq circadian-themes '((:sunrise . modus-operandi)
+			   (:sunset  . modus-vivendi)))
+  (circadian-setup))
 #+end_src
 
 * Org
@@ -200,23 +205,23 @@ Org-tempo is a package that allows for '<s' followed by TAB to expand to a begin
 
 #+begin_src emacs-lisp
 (use-package org-tempo
-    :ensure nil) ;; tell use-package not to try to install org-tempo since it's already there.
+  :ensure nil) ;; tell use-package not to try to install org-tempo since it's already there.
 #+end_src
 
 We want the same syntax highlighting in source blocks as in the native language files.
 #+begin_src emacs-lisp
 (setq org-src-fontify-natively t
-    org-src-tab-acts-natively t
-    org-confirm-babel-evaluate nil
-    org-edit-src-content-indentation 0)
+      org-src-tab-acts-natively t
+      org-confirm-babel-evaluate nil
+      org-edit-src-content-indentation 0)
 #+end_src
 
 Enable evaluating code blocks
 #+begin_src emacs-lisp
 ;; active Babel languages
 (org-babel-do-load-languages
-    'org-babel-load-languages
-    '((shell . t)))
+ 'org-babel-load-languages
+ '((shell . t)))
 #+end_src
 
 * Misc settings
@@ -224,7 +229,7 @@ Enable evaluating code blocks
 Font size
 #+begin_src emacs-lisp
 (set-face-attribute 'default nil
-    :height 150)
+		    :height 150)
 #+end_src
 
 Start with a scratch buffer
@@ -234,8 +239,8 @@ Start with a scratch buffer
 
 Disable Menubar, Toolbars and Scrollbars
 #+begin_src emacs-lisp
-(menu-bar-mode -1)
-(tool-bar-mode -1)
+;; (menu-bar-mode -1)
+;; (tool-bar-mode -1)
 (scroll-bar-mode -1)
 #+end_src
 
