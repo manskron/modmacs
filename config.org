@@ -53,10 +53,9 @@
 
 (use-package which-key
   :init
+  (setq which-key-idle-delay 0)
   (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.3))
+  :diminish which-key-mode)
 #+end_src
 
 * Keymappings
