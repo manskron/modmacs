@@ -61,6 +61,9 @@
 * Keymappings
 
 #+begin_src emacs-lisp
+(defun open-config ()
+  (interactive) (find-file "~/modmacs/config.org"))
+
 (use-package general
   :config
   (general-create-definer mods/leader-keys
@@ -103,7 +106,7 @@
     "f r"	'(recentf-open-files :which-key "Open recent")
     "f s"	'(save-buffer :which-key "Save")
     "f S"	'(write-file :which-key "Save as...")
-    "f c"	'((lambda () (interactive) (find-file "~/modmacs/config.org")) :which-key: "Open config.org")
+    "f c"	'(open-config :which-key "Open config.org")
 
     ;;Git
     "g"		'(magit-status :which-key "Magit")
