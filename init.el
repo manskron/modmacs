@@ -220,8 +220,8 @@
 (use-package circadian
   :after solar
   :config
-  (setq circadian-themes '((:sunrise . modus-operandi)
-			   (:sunset  . modus-vivendi)))
+  (setq circadian-themes '((:sunrise . modus-operandi-tinted)
+			   (:sunset  . modus-vivendi-tinted)))
   (circadian-setup))
 
 ;;;;;;;;;
@@ -318,3 +318,8 @@
 (format-time-string "%H:%M")
 
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
+
+(fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
+
+(show-paren-mode 1)
+(setq linum-format "%4d ")
