@@ -116,50 +116,10 @@
 
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
 
-;;;;;;;;;;;
-;; Theme ;;
-;;;;;;;;;;;
-
-(setq modus-themes-org-blocks 'gray-background
-      modus-themes-mixed-fonts t)
-(setq modus-themes-common-palette-overrides
-      '(
-	;; Make the active mode line a fine shade of lavender
-	;; (purple) and tone down the gray of the inactive mode
-	;; lines.
-	(bg-mode-line-active bg-lavender)
-	(border-mode-line-active bg-lavender)
-	(bg-mode-line-inactive bg-dim)
-	(border-mode-line-inactive bg-inactive)
-	;; Hide fringe
-	(fringe unspecified)
-	;; Make line numbers less intense and add a shade of cyan
-	;; for the current line number.
-	(fg-line-number-inactive "gray50")
-	(fg-line-number-active cyan-cooler)
-	(bg-line-number-inactive unspecified)
-	(bg-line-number-active unspecified)
-	;; Remove the border
-	(border-mode-line-active unspecified)
-	(border-mode-line-inactive unspecified)
-	))
-
-(use-package solar
-  :ensure nil
-  :config
-  (setq calendar-latitude 59.33
-	calendar-longitude 18.06))
-
-(use-package circadian
-  :after solar
-  :config
-  (setq circadian-themes '((:sunrise . modus-operandi-tinted)
-			   (:sunset  . modus-vivendi-tinted)))
-  (circadian-setup))
-
 ;;;;;;;;;;;;;;;;;;;
 ;; Misc settings ;;
 ;;;;;;;;;;;;;;;;;;;
+(load-theme 'deeper-blue)
 
 ;;Tab width
 (setq tab-width 4
@@ -173,8 +133,6 @@
       ;;Start with a scratch buffer
       inhibit-startup-message t)
 
-(display-line-numbers-mode -1)
-
 ;;Font size
 (set-face-attribute 'default nil
 		    :height 150)
@@ -187,8 +145,8 @@
 ;;Highlight active line
 (hl-line-mode t)
 
-;;Show line numbers
-(global-display-line-numbers-mode 1)
+;;Hide line numbers
+(global-display-line-numbers-mode -1)
 
 ;;Refresh buffer if the underlying file changes
 (global-auto-revert-mode 1)
