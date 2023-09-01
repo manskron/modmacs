@@ -20,38 +20,15 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package org)
-
 (use-package evil
   :config
   (evil-mode 1))
 
-(use-package projectile
-  :config
-  (projectile-mode +1)
-  :bind (
-	 ("s-p" . projectile-command-map)
-	 ("C-c p" . projectile-command-map)))
-
 (use-package magit)
-
-(use-package clojure-mode)
-
-(use-package cider)
-
-(use-package sly)
-
-(use-package lsp-mode
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (typescript-ts-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
 
 (use-package flycheck
   :init (global-flycheck-mode))
+
 (use-package orderless
   :ensure t
   :custom
@@ -122,56 +99,12 @@
   (vertico-mode))
 
 
-(use-package corfu
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.0)
-  (corfu-preview-current nil)    ;; Disable current candidate preview
-  ;; (corfu-echo-documentation 0.2)
-
-  ;; Enable Corfu only for certain modes.
-  ;; :hook ((prog-mode . corfu-mode)
-  ;;        (shell-mode . corfu-mode)
-  ;;        (eshell-mode . corfu-mode))
-
-  ;; Use TAB for cycling, default is `corfu-complete'.
-  :bind
-  (:map corfu-map
-		("M-SPC" . corfu-insert-separator)
-		("RET" . nil)
-		("S-<return>" . corfu-insert)
-        ("TAB" . corfu-next)
-        ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous))
-
-  :init
-  ;; (corfu-echo-mode)
-  (corfu-history-mode)
-  (corfu-popupinfo-mode)
-  (global-corfu-mode))
-
-
-;; A few more useful configurations...
-(use-package emacs
-  :init
-  ;; TAB cycle if there are only few candidates
-  (setq completion-cycle-threshold 3)
-
-  ;; Enable indentation+completion using the TAB key.
-  ;; `completion-at-point' is often bound to M-TAB.
-  (setq tab-always-indent 'complete))
-
 (use-package which-key
   :init
   (setq which-key-idle-delay 0)
   (which-key-mode)
   :diminish which-key-mode)
 
-(use-package sly)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom functions ;;
@@ -224,47 +157,6 @@
 			   (:sunset  . modus-vivendi-tinted)))
   (circadian-setup))
 
-;;;;;;;;;
-;; Org ;;
-;;;;;;;;;
-
-;; Org-tempo is a package that allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
-
-;;| Typing the below + TAB | Expands to ...                          |
-;;|------------------------+-----------------------------------------|
-;;| <a                   | '#+BEGIN_EXPORT ascii' … '#+END_EXPORT  |
-;;| <c                     | '#+BEGIN_CENTER' … '#+END_CENTER'       |
-;;| <C                     | '#+BEGIN_COMMENT' … '#+END_COMMENT'     |
-;;| <e                     | '#+BEGIN_EXAMPLE' … '#+END_EXAMPLE'     |
-;;| <E                     | '#+BEGIN_EXPORT' … '#+END_EXPORT'       |
-;;| <h                     | '#+BEGIN_EXPORT html' … '#+END_EXPORT'  |
-;;| <l                     | '#+BEGIN_EXPORT latex' … '#+END_EXPORT' |
-;;| <q                     | '#+BEGIN_QUOTE' … '#+END_QUOTE'         |
-;;| <s                     | '#+BEGIN_SRC' … '#+END_SRC'             |
-;;| <v                     | '#+BEGIN_VERSE' … '#+END_VERSE'         |
-
-
-;; Make TAB work as expected in org-mode
-(general-define-key
- :states 'normal
- :keymaps 'org-mode-map
- "TAB" 'org-cycle)
-
-(use-package org-tempo
-  :ensure nil) ;; tell use-package not to try to install org-tempo since it's already there.
-
-;; We want the same syntax highlighting in source blocks as in the native language files.
-(setq org-src-fontify-natively t
-      org-src-tab-acts-natively t
-      org-confirm-babel-evaluate nil
-      org-edit-src-content-indentation 0)
-
-;; Enable evaluating code blocks
-;; active Babel languages
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((shell . t)))
-
 ;;;;;;;;;;;;;;;;;;;
 ;; Misc settings ;;
 ;;;;;;;;;;;;;;;;;;;
@@ -280,6 +172,8 @@
       global-auto-revert-non-file-buffers t
       ;;Start with a scratch buffer
       inhibit-startup-message t)
+
+(display-line-numbers-mode -1)
 
 ;;Font size
 (set-face-attribute 'default nil
@@ -322,4 +216,3 @@
 (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
 
 (show-paren-mode 1)
-(setq linum-format "%4d ")
