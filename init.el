@@ -20,14 +20,11 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package evil
-  :config
-  (evil-mode 1))
+;; (use-package evil
+;;   :config
+;;   (evil-mode 1))
 
 (use-package magit)
-
-(use-package flycheck
-  :init (global-flycheck-mode))
 
 (use-package orderless
   :ensure t
@@ -114,19 +111,12 @@
   "Opens ny config."
   (interactive) (find-file "~/modmacs/init.el"))
 
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
-
 ;;;;;;;;;;;;;;;;;;;
 ;; Misc settings ;;
 ;;;;;;;;;;;;;;;;;;;
-(load-theme 'deeper-blue)
 
 ;;Tab width
-(setq tab-width 4
-      evil-shift-width 4
-      ;;Help find tree-sitter grammars
-      treesit-extra-load-path '("/User/mans/.emacs.d/tree-sitter")
-      ;;Bind fn to super
+(setq ;;Bind fn to super
       ns-function-modifier 'super
       ;;Refresh dired when files change
       global-auto-revert-non-file-buffers t
@@ -135,7 +125,7 @@
 
 ;;Font size
 (set-face-attribute 'default nil
-		    :height 150)
+		    :height 160)
 
 ;;Disable Menubar, Toolbars and Scrollbars
 ;; (menu-bar-mode -1)
@@ -150,7 +140,6 @@
 
 ;;Refresh buffer if the underlying file changes
 (global-auto-revert-mode 1)
-
 
 ;;Enable recent files
 (recentf-mode 1)
