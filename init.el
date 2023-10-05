@@ -20,11 +20,19 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; (use-package evil
-;;   :config
-;;   (evil-mode 1))
+(use-package evil
+   :config
+   (evil-mode 1))
 
 (use-package magit)
+
+(use-package prettier-js)
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1))
+
 
 (use-package orderless
   :ensure t
@@ -115,6 +123,10 @@
 ;; Misc settings ;;
 ;;;;;;;;;;;;;;;;;;;
 
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
+
+(setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
+
 ;;Tab width
 (setq ;;Bind fn to super
       ns-function-modifier 'super
@@ -163,3 +175,5 @@
 (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
 
 (show-paren-mode 1)
+
+(load-theme 'sandcastle)
