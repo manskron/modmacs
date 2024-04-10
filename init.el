@@ -1,9 +1,3 @@
-(setq vc-follow-symlinks t)
-
-;;;;;;;;;;;;;;
-;; Packages ;;
-;;;;;;;;;;;;;;
-
 (require 'package)
 
 (setq package-archives
@@ -20,19 +14,113 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; Custom functions 
+(defun open-config ()
+  "Opens my config."
+  (interactive) (find-file "~/modmacs/init.el"))
+
+(defun dom-indent-buffer ()
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
+
+;;Emacs
+(use-package emacs
+  :ensure nil
+  :config
+    ;; (menu-bar-mode -1)
+    ;; (tool-bar-mode -1)
+    (scroll-bar-mode -1)
+    ;;Highlight active line
+    (hl-line-mode t)
+    ;;Hide line numbers
+    (global-display-line-numbers-mode -1)
+    ;;Refresh buffer if the underlying file changes
+    (global-auto-revert-mode 1)
+    ;;Enable recent files
+    (recentf-mode 1)
+    ;;Restore last cursor location in previously opened files
+    (save-place-mode 1)
+    ;;Start in fullscreen
+    (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+    ;;Misc
+    (display-time-mode 1)
+    (format-time-string "%H:%M")
+    (show-paren-mode 1)
+    (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
+    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
+    (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
+  )
+
+
+;; Theme Setup
+(use-package modus-themes)
+
+(use-package solar 
+  :ensure nil
+  :config
+  (setq calendar-latitude 59.32
+        calendar-longitude 18.06))
+
+(use-package circadian
+  :after solar
+  :config
+  (setq circadian-themes '((:sunrise . modus-operandi-tinted)
+                           (:sunset  . modus-vivendi-tinted)))
+  (circadian-setup))
+
+;; Packages 
+(use-package nvm)
+(use-package evil-leader
+  :custom
+  (evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (evil-want-keybinding nil)
+  :config
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key
+    ;; Project
+    "pf" 'project-find-file
+    "pp" 'project-switch-project
+    "sg" 'consult-ripgrep
+    ;;Files
+    "fr" 'recentf
+    "fs" 'save-buffer
+    "fc" 'open-config
+    ;; Buffers
+    "<SPC>" 'switch-to-buffer
+    "bd" 'kill-buffer
+    "be" 'eval-buffer
+    "bi" 'ibuffer
+    "cf" 'dom-indent-buffer
+    ;; Window Management
+    "w/" 'split-window-right
+    "w-" 'split-window-below
+    "wd" 'delete-window
+    "wr" 'restart-emacs
+    "wl" 'evil-window-right
+    "wh" 'evil-window-left
+    "wk" 'evil-window-up
+    "wj" 'evil-window-down
+    "wt" 'vterm-other-window
+    ;; Git
+    "gs" 'magit
+    "t" 'treemacs
+    )
+  )
+
 (use-package evil
-   :config
-   (evil-mode 1))
+  :after evil-leader
+  :config
+  (evil-set-initial-state 'eww-mode 'emacs)
+  :init
+  (global-evil-leader-mode)
+  :hook
+  ((prog-mode) . evil-mode)
+  )
 
 (use-package magit)
 
 (use-package prettier-js)
-
-(use-package projectile
-  :ensure t
-  :init
-  (projectile-mode +1))
-
 
 (use-package orderless
   :ensure t
@@ -103,7 +191,6 @@
   :init
   (vertico-mode))
 
-
 (use-package which-key
   :init
   (setq which-key-idle-delay 0)
@@ -111,22 +198,9 @@
   :diminish which-key-mode)
 
 
-;;;;;;;;;;;;;;;;;;;;;;
-;; Custom functions ;;
-;;;;;;;;;;;;;;;;;;;;;;
-
-(defun open-config ()
-  "Opens ny config."
-  (interactive) (find-file "~/modmacs/init.el"))
-
-;;;;;;;;;;;;;;;;;;;
-;; Misc settings ;;
-;;;;;;;;;;;;;;;;;;;
-
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
-
+;;Vars
+(setq vc-follow-symlinks t)
 (setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
-
 ;;Tab width
 (setq ;;Bind fn to super
       ns-function-modifier 'super
@@ -134,46 +208,16 @@
       global-auto-revert-non-file-buffers t
       ;;Start with a scratch buffer
       inhibit-startup-message t)
-
 ;;Font size
 (set-face-attribute 'default nil
-		    :height 160)
-
-;;Disable Menubar, Toolbars and Scrollbars
-;; (menu-bar-mode -1)
-;; (tool-bar-mode -1)
-(scroll-bar-mode -1)
-
-;;Highlight active line
-(hl-line-mode t)
-
-;;Hide line numbers
-(global-display-line-numbers-mode -1)
-
-;;Refresh buffer if the underlying file changes
-(global-auto-revert-mode 1)
-
-;;Enable recent files
-(recentf-mode 1)
-
-;;Restore last cursor location in previously opened files
-(save-place-mode 1)
-
-;;Start in fullscreen
-(add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
-
+		    :height 150)
+;;please stop
+(setq visible-bell t)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
 
-(display-time-mode 1)
-(format-time-string "%H:%M")
 
-(global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 
-(fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
 
-(show-paren-mode 1)
-
-(load-theme 'sandcastle)
