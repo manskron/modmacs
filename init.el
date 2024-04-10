@@ -28,28 +28,28 @@
 (use-package emacs
   :ensure nil
   :config
-    ;; (menu-bar-mode -1)
-    ;; (tool-bar-mode -1)
-    (scroll-bar-mode -1)
-    ;;Highlight active line
-    (hl-line-mode t)
-    ;;Hide line numbers
-    (global-display-line-numbers-mode -1)
-    ;;Refresh buffer if the underlying file changes
-    (global-auto-revert-mode 1)
-    ;;Enable recent files
-    (recentf-mode 1)
-    ;;Restore last cursor location in previously opened files
-    (save-place-mode 1)
-    ;;Start in fullscreen
-    (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
-    ;;Misc
-    (display-time-mode 1)
-    (format-time-string "%H:%M")
-    (show-paren-mode 1)
-    (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
-    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
-    (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
+  ;; (menu-bar-mode -1)
+  ;; (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  ;;Highlight active line
+  (hl-line-mode t)
+  ;;Hide line numbers
+  (global-display-line-numbers-mode -1)
+  ;;Refresh buffer if the underlying file changes
+  (global-auto-revert-mode 1)
+  ;;Enable recent files
+  (recentf-mode 1)
+  ;;Restore last cursor location in previously opened files
+  (save-place-mode 1)
+  ;;Start in fullscreen
+  (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+  ;;Misc
+  (display-time-mode 1)
+  (format-time-string "%H:%M")
+  (show-paren-mode 1)
+  (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
+  (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
   )
 
 
@@ -181,7 +181,7 @@
          :map minibuffer-local-map
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
          ("M-r" . consult-history))                ;; orig. previous-matching-history-element
-)
+  )
 
 (use-package marginalia
   :init
@@ -203,11 +203,11 @@
 (setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
 ;;Tab width
 (setq ;;Bind fn to super
-      ns-function-modifier 'super
-      ;;Refresh dired when files change
-      global-auto-revert-non-file-buffers t
-      ;;Start with a scratch buffer
-      inhibit-startup-message t)
+ ns-function-modifier 'super
+ ;;Refresh dired when files change
+ global-auto-revert-non-file-buffers t
+ ;;Start with a scratch buffer
+ inhibit-startup-message t)
 ;;Font size
 (set-face-attribute 'default nil
 		    :height 150)
@@ -216,8 +216,4 @@
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
-
-
-
-
 
