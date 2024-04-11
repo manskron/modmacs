@@ -211,8 +211,6 @@
 ;;Font size
 (set-face-attribute 'default nil
 		    :height 150)
-;;please stop
-(setq visible-bell t)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
