@@ -81,7 +81,7 @@
     ;; Project
     "pf" 'project-find-file
     "pp" 'project-switch-project
-    "sg" 'consult-ripgrep
+    "ps" 'consult-ripgrep
     ;;Files
     "fr" 'recentf
     "fs" 'save-buffer
@@ -102,9 +102,10 @@
     "wk" 'evil-window-up
     "wj" 'evil-window-down
     "wt" 'vterm-other-window
-    ;; Git
+    ;; Git 
     "gs" 'magit
-    "t" 'treemacs
+    ;; Search
+    "ss" 'avy-goto-char-2
     )
   )
 
