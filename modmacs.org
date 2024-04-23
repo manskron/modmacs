@@ -14,7 +14,7 @@ count of {{{word-count}}}.*
 + Git repositories:
   - GitHub: <https://github.com/manskron/modmacs>
     
-** Emacs settings
+* Emacs settings
 
 Hide scroll bar, tool bar and menu bar. Don't do this if you are new to emacs.
 It is a fantastic way to discover functionality and keybindings.
@@ -105,7 +105,7 @@ Send custom.el to oblivion
 #+begin_src emacs-lisp :tangle "init.el"
   (setq custom-file (make-temp-file "emacs-custom-"))
 #+end_src
-** Package init
+* Package init
 
 #+begin_src emacs-lisp :tangle "init.el"
   (require 'package)
@@ -124,7 +124,7 @@ Send custom.el to oblivion
   (setq use-package-always-ensure t)
 #+end_src
 
-** Theme
+* Theme
 
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package modus-themes)
@@ -147,8 +147,8 @@ Send custom.el to oblivion
     (circadian-setup))
 #+end_src
 
-** Packages
-*** LSP
+* Packages
+** LSP
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package lsp-mode
     :init
@@ -166,7 +166,7 @@ Send custom.el to oblivion
   (use-package lsp-ui :commands lsp-ui-mode)
 #+end_src
 
-*** Evil-leader
+** Evil-leader
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package evil-leader
     :custom
@@ -206,7 +206,7 @@ Send custom.el to oblivion
       )
     )
 #+end_src
-*** Evil
+** Evil
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package evil
     :after evil-leader
@@ -220,20 +220,20 @@ Send custom.el to oblivion
     ((prog-mode) . evil-mode)
     )
 #+end_src
-*** Magit
+** Magit
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package magit)
 #+end_src
-*** Web Dev
-**** Nvm
+** Web Dev
+*** Nvm
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package nvm)
 #+end_src
-**** Prettier
+*** Prettier
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package prettier-js)
 #+end_src
-*** Orderless
+** Orderless
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package orderless
     :ensure t
@@ -243,7 +243,7 @@ Send custom.el to oblivion
 
 #+end_src
 
-*** Consult
+** Consult
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package consult
     ;; Replace bindings. Lazily loaded due by `use-package'.
@@ -301,21 +301,21 @@ Send custom.el to oblivion
     )
 #+end_src
 
-*** Marginalia
+** Marginalia
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package marginalia
     :init
     (marginalia-mode))
 #+end_src
 
-*** Vertico
+** Vertico
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico
     :init
     (vertico-mode))
 #+end_src
 
-*** which-key
+** which-key
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package which-key
     :init
@@ -324,7 +324,7 @@ Send custom.el to oblivion
     :diminish which-key-mode)
 #+end_src
 
-** Custom functions
+* Custom functions
 #+begin_src emacs-lisp :tangle "init.el"
   ;; Custom functions 
   (defun open-config ()
