@@ -13,26 +13,7 @@ count of {{{word-count}}}.*
 + Website: <https://mans.computer>
 + Git repositories:
   - GitHub: <https://github.com/manskron/modmacs>
-
-** use-package setup
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (require 'package)
-
-  (setq package-archives
-        '(("melpa" . "https://melpa.org/packages/")
-          ("melpa-stable" . "https://stable.melpa.org/packages/")
-          ("org" . "https://orgmode.org/elpa/")
-          ("elpa" . "https://elpa.gnu.org/packages/")))
-
-  (package-initialize)
-
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-  (require 'use-package)
-  (setq use-package-always-ensure t)
-#+end_src
-
+    
 ** Emacs settings
 
 Hide scroll bar, tool bar and menu bar. Don't do this if you are new to emacs.
@@ -89,10 +70,59 @@ Make confirmation prompts comfortable
   (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
 #+end_src
 
+Enable typescript-ts-mode for .tsx files
 #+begin_src emacs-lisp :tangle "init.el"
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
 #+end_src
 
+Follow symlinks
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq vc-follow-symlinks t)
+#+end_src
+
+Point to tree-sitter grammars
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
+#+end_src
+
+Refresh dired when files change
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq  global-auto-revert-non-file-buffers t)
+#+end_src
+
+Start with a scratch buffer
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq  inhibit-startup-message t)
+#+end_src
+
+Font size
+#+begin_src emacs-lisp :tangle "init.el"
+  (set-face-attribute 'default nil
+                      :height 150)
+#+end_src
+
+Send custom.el to oblivion
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq custom-file (make-temp-file "emacs-custom-"))
+#+end_src
+** Package init
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (require 'package)
+
+  (setq package-archives
+        '(("melpa" . "https://melpa.org/packages/")
+          ("melpa-stable" . "https://stable.melpa.org/packages/")
+          ("org" . "https://orgmode.org/elpa/")
+          ("elpa" . "https://elpa.gnu.org/packages/")))
+
+  (package-initialize)
+
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+#+end_src
 
 ** Theme
 
@@ -117,43 +147,27 @@ Make confirmation prompts comfortable
     (circadian-setup))
 #+end_src
 
-** LSP
+** Packages
+*** LSP
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package lsp-mode
     :init
-    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
     (setq lsp-keymap-prefix "C-c l")
-    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+    :hook (
            (typescript-ts-mode . lsp)
-           ;; if you want which-key integration
            (lsp-mode . lsp-enable-which-key-integration))
-    :config (
-             setq lsp-ui-doc-show-with-cursor t)
     :commands lsp)
 #+end_src
+
+
+
 
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package lsp-ui :commands lsp-ui-mode)
 #+end_src
 
+*** Evil-leader
 #+begin_src emacs-lisp :tangle "init.el"
-
-  ;; Custom functions 
-  (defun open-config ()
-    "Opens my config."
-    (interactive) (find-file "~/modmacs/modmacs.org"))
-
-  (defun dom-indent-buffer ()
-    (interactive)
-    (save-excursion
-      (indent-region (point-min) (point-max) nil)))
-
-
-  ;; Packages 
-
-
-  (use-package nvm)
-
   (use-package evil-leader
     :custom
     (evil-want-integration t) ;; This is optional since it's already set to t by default.
@@ -191,27 +205,46 @@ Make confirmation prompts comfortable
       "ss" 'avy-goto-char-2
       )
     )
-
+#+end_src
+*** Evil
+#+begin_src emacs-lisp :tangle "init.el"
   (use-package evil
     :after evil-leader
     :config
     (evil-set-initial-state 'eww-mode 'emacs)
+    (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
     :init
+    (setq evil-want-C-i-jump nil)
     (global-evil-leader-mode)
     :hook
     ((prog-mode) . evil-mode)
     )
-
+#+end_src
+*** Magit
+#+begin_src emacs-lisp :tangle "init.el"
   (use-package magit)
-
+#+end_src
+*** Web Dev
+**** Nvm
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package nvm)
+#+end_src
+**** Prettier
+#+begin_src emacs-lisp :tangle "init.el"
   (use-package prettier-js)
-
+#+end_src
+*** Orderless
+#+begin_src emacs-lisp :tangle "init.el"
   (use-package orderless
     :ensure t
     :custom
     (completion-styles '(orderless basic))
     (completion-category-overrides '((file (styles basic partial-completion)))))
 
+#+end_src
+
+*** Consult
+#+begin_src emacs-lisp :tangle "init.el"
   (use-package consult
     ;; Replace bindings. Lazily loaded due by `use-package'.
     :bind (;; C-c bindings in `mode-specific-map'
@@ -266,37 +299,41 @@ Make confirmation prompts comfortable
            ("M-s" . consult-history)                 ;; orig. next-matching-history-element
            ("M-r" . consult-history))                ;; orig. previous-matching-history-element
     )
+#+end_src
 
+*** Marginalia
+#+begin_src emacs-lisp :tangle "init.el"
   (use-package marginalia
     :init
     (marginalia-mode))
+#+end_src
 
+*** Vertico
+#+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico
     :init
     (vertico-mode))
+#+end_src
 
+*** which-key
+#+begin_src emacs-lisp :tangle "init.el"
   (use-package which-key
     :init
     (setq which-key-idle-delay 0)
     (which-key-mode)
     :diminish which-key-mode)
-
-
-  ;;Vars
-  (setq vc-follow-symlinks t)
-  (setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
-  ;;Tab width
-  (setq ;;Bind fn to super
-   ns-function-modifier 'super
-   ;;Refresh dired when files change
-   global-auto-revert-non-file-buffers t
-   ;;Start with a scratch buffer
-   inhibit-startup-message t)
-  ;;Font size
-  (set-face-attribute 'default nil
-                      :height 150)
-
-  (setq custom-file "~/.emacs.d/custom.el")
-  (load custom-file)
-
 #+end_src
+
+** Custom functions
+#+begin_src emacs-lisp :tangle "init.el"
+  ;; Custom functions 
+  (defun open-config ()
+    "Opens my config."
+    (interactive) (find-file "~/modmacs/modmacs.org"))
+
+  (defun dom-indent-buffer ()
+    (interactive)
+    (save-excursion
+      (indent-region (point-min) (point-max) nil)))
+#+end_src
+

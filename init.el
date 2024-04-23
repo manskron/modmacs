@@ -1,19 +1,3 @@
-(require 'package)
-
-(setq package-archives
-      '(("melpa" . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")
-        ("org" . "https://orgmode.org/elpa/")
-        ("elpa" . "https://elpa.gnu.org/packages/")))
-
-(package-initialize)
-
-;; Initialize use-package on non-Linux platforms
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t)
-
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -39,18 +23,34 @@
 
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
 
-;; Custom functions 
-(defun open-config ()
-  "Opens my config."
-  (interactive) (find-file "~/modmacs/init.el"))
+(setq vc-follow-symlinks t)
 
-(defun dom-indent-buffer ()
-  (interactive)
-  (save-excursion
-    (indent-region (point-min) (point-max) nil)))
+(setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
 
+(setq  global-auto-revert-non-file-buffers t)
 
-;; Theme Setup
+(setq  inhibit-startup-message t)
+
+(set-face-attribute 'default nil
+                    :height 150)
+
+(setq custom-file (make-temp-file "emacs-custom-"))
+
+(require 'package)
+
+(setq package-archives
+      '(("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")
+        ("elpa" . "https://elpa.gnu.org/packages/")))
+
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+(setq use-package-always-ensure t)
+
 (use-package modus-themes)
 
 (use-package solar 
@@ -66,22 +66,15 @@
                            (:sunset  . modus-vivendi-tinted)))
   (circadian-setup))
 
-;; Packages 
 (use-package lsp-mode
   :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+  :hook (
          (typescript-ts-mode . lsp)
-         ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
-  :config (
-           setq lsp-ui-doc-show-with-cursor t)
   :commands lsp)
 
 (use-package lsp-ui :commands lsp-ui-mode)
-
-(use-package nvm)
 
 (use-package evil-leader
   :custom
@@ -125,13 +118,17 @@
   :after evil-leader
   :config
   (evil-set-initial-state 'eww-mode 'emacs)
+  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
   :init
+  (setq evil-want-C-i-jump nil)
   (global-evil-leader-mode)
   :hook
   ((prog-mode) . evil-mode)
   )
 
 (use-package magit)
+
+(use-package nvm)
 
 (use-package prettier-js)
 
@@ -210,20 +207,12 @@
   (which-key-mode)
   :diminish which-key-mode)
 
+;; Custom functions 
+(defun open-config ()
+  "Opens my config."
+  (interactive) (find-file "~/modmacs/modmacs.org"))
 
-;;Vars
-(setq vc-follow-symlinks t)
-(setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
-;;Tab width
-(setq ;;Bind fn to super
- ns-function-modifier 'super
- ;;Refresh dired when files change
- global-auto-revert-non-file-buffers t
- ;;Start with a scratch buffer
- inhibit-startup-message t)
-;;Font size
-(set-face-attribute 'default nil
-                    :height 150)
-
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+(defun dom-indent-buffer ()
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
