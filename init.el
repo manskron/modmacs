@@ -2,9 +2,9 @@
 
 (setq package-archives
       '(("melpa" . "https://melpa.org/packages/")
-	("melpa-stable" . "https://stable.melpa.org/packages/")
-	("org" . "https://orgmode.org/elpa/")
-	("elpa" . "https://elpa.gnu.org/packages/")))
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")
+        ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 
@@ -13,6 +13,31 @@
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(hl-line-mode t)
+
+(global-display-line-numbers-mode -1)
+
+(global-auto-revert-mode 1)
+
+(recentf-mode 1)
+
+(save-place-mode 1)
+
+(add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+
+(display-time-mode 1)
+(format-time-string "%H:%M")
+
+(show-paren-mode 1)
+
+(fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
+
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
 
 ;; Custom functions 
 (defun open-config ()
@@ -23,34 +48,6 @@
   (interactive)
   (save-excursion
     (indent-region (point-min) (point-max) nil)))
-
-;;Emacs
-(use-package emacs
-  :ensure nil
-  :config
-  ;; (menu-bar-mode -1)
-  ;; (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-  ;;Highlight active line
-  (hl-line-mode t)
-  ;;Hide line numbers
-  (global-display-line-numbers-mode -1)
-  ;;Refresh buffer if the underlying file changes
-  (global-auto-revert-mode 1)
-  ;;Enable recent files
-  (recentf-mode 1)
-  ;;Restore last cursor location in previously opened files
-  (save-place-mode 1)
-  ;;Start in fullscreen
-  (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
-  ;;Misc
-  (display-time-mode 1)
-  (format-time-string "%H:%M")
-  (show-paren-mode 1)
-  (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
-  (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
-  )
 
 
 ;; Theme Setup
@@ -70,7 +67,22 @@
   (circadian-setup))
 
 ;; Packages 
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (typescript-ts-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :config (
+           setq lsp-ui-doc-show-with-cursor t)
+  :commands lsp)
+
+(use-package lsp-ui :commands lsp-ui-mode)
+
 (use-package nvm)
+
 (use-package evil-leader
   :custom
   (evil-want-integration t) ;; This is optional since it's already set to t by default.
@@ -211,8 +223,7 @@
  inhibit-startup-message t)
 ;;Font size
 (set-face-attribute 'default nil
-		    :height 150)
+                    :height 150)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
-
