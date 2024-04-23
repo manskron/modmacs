@@ -70,6 +70,55 @@
                            (:sunset  . modus-vivendi-tinted)))
   (circadian-setup))
 
+(use-package general
+  :config
+  (general-define-key
+   :states '(emacs insert normal)
+   :prefix-map 'modmacs-prefix-map
+   :global-prefix "C-c"
+   :non-normal-prefix "M-SPC"
+   :prefix "SPC")
+
+  (general-create-definer modmacs 
+    :keymaps 'modmacs-prefix-map)
+
+  (modmacs 
+    "SPC" 'switch-to-buffer
+    ";" 'vterm-toggle
+    "," '("config" . (keymap))
+    ",o" 'open-config
+    ",l" 'reload-config
+    ",t" 'tangle-config
+    "b" '("buffer" . (keymap))
+    "bd" 'kill-this-buffer
+    "be" 'eval-buffer
+    "bi" 'ibuffer
+    "c" '("code" . (keymap))
+    "cf" 'dom-indent-buffer
+    "f" '("file" . (keymap))
+    "fr" 'recentf
+    "fs" 'save-buffer
+    "g" '("git" . (keymap))
+    "gs" 'magit
+    "p" '("project" . (keymap))
+    "pd" 'project-dired
+    "pf" 'project-find-file
+    "pp" 'project-switch-project
+    "pb" 'project-list-buffers
+    "ps" 'consult-ripgrep
+    "p." 'project-async-shell-command
+    "w" '("window" . (keymap))
+    "w/" 'split-window-right
+    "w-" 'split-window-below
+    "wd" 'delete-window
+    "wr" 'restart-emacs
+    "wl" 'evil-window-right
+    "wh" 'evil-window-left
+    "wk" 'evil-window-up
+    "wj" 'evil-window-down
+    "wt" 'vterm-other-window
+    ))
+
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
@@ -80,56 +129,16 @@
 
 (use-package lsp-ui :commands lsp-ui-mode)
 
-(use-package evil-leader
-  :custom
-  (evil-want-integration t) ;; This is optional since it's already set to t by default.
-  (evil-want-keybinding nil)
-  :config
-  (evil-leader/set-leader "<SPC>")
-  (evil-leader/set-key
-    ;; Project
-    "pf" 'project-find-file
-    "pp" 'project-switch-project
-    "pb" 'project-list-buffers
-    "ps" 'consult-ripgrep
-    "pt" 'vterm-toggle
-    "p." 'project-async-shell-command
-    ;;Files
-    "fr" 'recentf
-    "fs" 'save-buffer
-    ;; Buffers
-    "<SPC>" 'switch-to-buffer
-    "bd" 'kill-this-buffer
-    "be" 'eval-buffer
-    "bi" 'ibuffer
-    "cf" 'dom-indent-buffer
-    ;; Window Management
-    "w/" 'split-window-right
-    "w-" 'split-window-below
-    "wd" 'delete-window
-    "wr" 'restart-emacs
-    "wl" 'evil-window-right
-    "wh" 'evil-window-left
-    "wk" 'evil-window-up
-    "wj" 'evil-window-down
-    "wt" 'vterm-other-window
-    ;; Git 
-    "gs" 'magit
-    ;; Search
-    "ss" 'avy-goto-char-2
-    ;; Config
-    ",o" 'open-config
-    ",l" 'reload-config
-    ",t" 'tangle-config
-    )
-  )
+(use-package which-key
+  :init
+  (setq which-key-idle-delay 0)
+  (which-key-mode)
+  :diminish which-key-mode)
 
 (use-package evil
-  :after evil-leader
   :config
   (evil-set-initial-state 'eww-mode 'emacs)
   (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
-  (global-evil-leader-mode)
   :init
   (setq evil-want-C-i-jump nil)
   :hook
@@ -210,12 +219,6 @@
 (use-package vertico
   :init
   (vertico-mode))
-
-(use-package which-key
-  :init
-  (setq which-key-idle-delay 0)
-  (which-key-mode)
-  :diminish which-key-mode)
 
 (use-package vterm)
 
