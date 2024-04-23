@@ -119,6 +119,35 @@
     "wt" 'vterm-other-window
     ))
 
+(use-package dired
+  :ensure nil
+  :hook ((dired-mode . hl-line-mode)
+         (dired-mode . dired-hide-details-mode))
+  ;; Avoid having to q myself to death
+  :config (setf dired-kill-when-opening-new-dired-buffer t)
+  :general
+  (:states 'normal
+           :prefix ","
+           "d" '(lambda() (interactive) (dired default-directory)))
+  (:states 'normal
+           :keymaps 'dired-mode-map
+           "j" 'dired-next-line
+           "k" 'dired-previous-line
+           "h" 'dired-up-directory
+           "l" 'dired-find-file
+           "yy" 'dired-do-copy
+           "yn" 'dired-copy-filename-as-kill
+           "m" 'dired-mark
+           "u" 'dired-unmark
+           "t" 'dired-toggle-marks
+           "v" 'dired-display-file
+           "cw" 'dired-do-rename
+           "r" 'revert-buffer
+           "nd" 'dired-create-directory
+           "nf" 'dired-create-empty-file
+           "s" 'dired-do-async-shell-command
+           ))
+
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
