@@ -36,6 +36,10 @@
 
 (setq custom-file (make-temp-file "emacs-custom-"))
 
+(setq make-backup-files nil)
+(setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
+(setq create-lockfiles nil)
+
 (require 'package)
 
 (setq package-archives
@@ -86,14 +90,16 @@
     ;; Project
     "pf" 'project-find-file
     "pp" 'project-switch-project
+    "pb" 'project-list-buffers
     "ps" 'consult-ripgrep
+    "pt" 'vterm-toggle
+    "p." 'project-async-shell-command
     ;;Files
     "fr" 'recentf
     "fs" 'save-buffer
-    "fc" 'open-config
     ;; Buffers
     "<SPC>" 'switch-to-buffer
-    "bd" 'kill-buffer
+    "bd" 'kill-this-buffer
     "be" 'eval-buffer
     "bi" 'ibuffer
     "cf" 'dom-indent-buffer
@@ -111,6 +117,10 @@
     "gs" 'magit
     ;; Search
     "ss" 'avy-goto-char-2
+    ;; Config
+    ",o" 'open-config
+    ",l" 'reload-config
+    ",t" 'tangle-config
     )
   )
 
@@ -119,9 +129,9 @@
   :config
   (evil-set-initial-state 'eww-mode 'emacs)
   (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+  (global-evil-leader-mode)
   :init
   (setq evil-want-C-i-jump nil)
-  (global-evil-leader-mode)
   :hook
   ((prog-mode) . evil-mode)
   )
@@ -207,10 +217,22 @@
   (which-key-mode)
   :diminish which-key-mode)
 
+(use-package vterm)
+
+(use-package vterm-toggle)
+
 ;; Custom functions 
 (defun open-config ()
   "Opens my config."
   (interactive) (find-file "~/modmacs/modmacs.org"))
+
+(defun tangle-config ()
+  "Tangles my config."
+  (interactive) (org-babel-tangle "~/modmacs/modmacs.org"))
+
+(defun reload-config ()
+  "Reloads my config."
+  (interactive) (load-file "~/modmacs/init.el"))
 
 (defun dom-indent-buffer ()
   (interactive)
