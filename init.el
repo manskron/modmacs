@@ -21,8 +21,6 @@
 
 (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
 
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
-
 (setq vc-follow-symlinks t)
 
 (setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
@@ -83,18 +81,21 @@
     :keymaps 'modmacs-prefix-map)
 
   (modmacs 
-    "SPC" 'switch-to-buffer
+    "SPC" 'execute-extended-command
+    "/" 'consult-line
     ";" 'vterm-toggle
     "," '("config" . (keymap))
-    ",o" 'open-config
-    ",l" 'reload-config
+    ",c" 'open-config
+    ",r" 'reload-config
     ",t" 'tangle-config
     "b" '("buffer" . (keymap))
+    "bb" 'consult-buffer
     "bd" 'kill-this-buffer
     "be" 'eval-buffer
     "bi" 'ibuffer
     "c" '("code" . (keymap))
     "cf" 'dom-indent-buffer
+    "cx" 'consult-flymake
     "f" '("file" . (keymap))
     "fr" 'recentf
     "fs" 'save-buffer
@@ -107,6 +108,8 @@
     "pb" 'project-list-buffers
     "ps" 'consult-ripgrep
     "p." 'project-async-shell-command
+    "s" '("search" . (keymap))
+    "ss" 'avy-goto-char-2
     "w" '("window" . (keymap))
     "w/" 'split-window-right
     "w-" 'split-window-below
@@ -151,12 +154,19 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.stories.tsx\\'" . typescript-ts-mode))
   :hook (
-         (typescript-ts-mode . lsp)
+         (typescript-ts-base-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 
-(use-package lsp-ui :commands lsp-ui-mode)
+(use-package lsp-ui
+  :config
+  (setq lsp-ui-doc-enable t)
+  (setq lsp-ui-doc-show-with-cursor t)
+  (setq lsp-lens-enable t)
+  :commands lsp-ui-mode)
 
 (use-package which-key
   :init
@@ -183,6 +193,7 @@
 (use-package orderless
   :ensure t
   :custom
+  (orderless-matching-styles '(orderless-flex orderless-literal))
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
@@ -252,6 +263,8 @@
 (use-package vterm)
 
 (use-package vterm-toggle)
+
+(use-package avy)
 
 ;; Custom functions 
 (defun open-config ()

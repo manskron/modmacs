@@ -70,11 +70,6 @@ Make confirmation prompts comfortable
   (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
 #+end_src
 
-Enable typescript-ts-mode for .tsx files
-#+begin_src emacs-lisp :tangle "init.el"
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
-#+end_src
-
 Follow symlinks
 #+begin_src emacs-lisp :tangle "init.el"
   (setq vc-follow-symlinks t)
@@ -170,18 +165,21 @@ Don't create backups and lockfiles
       :keymaps 'modmacs-prefix-map)
 
     (modmacs 
-      "SPC" 'switch-to-buffer
+      "SPC" 'execute-extended-command
+      "/" 'consult-line
       ";" 'vterm-toggle
       "," '("config" . (keymap))
-      ",o" 'open-config
-      ",l" 'reload-config
+      ",c" 'open-config
+      ",r" 'reload-config
       ",t" 'tangle-config
       "b" '("buffer" . (keymap))
+      "bb" 'consult-buffer
       "bd" 'kill-this-buffer
       "be" 'eval-buffer
       "bi" 'ibuffer
       "c" '("code" . (keymap))
       "cf" 'dom-indent-buffer
+      "cx" 'consult-flymake
       "f" '("file" . (keymap))
       "fr" 'recentf
       "fs" 'save-buffer
@@ -194,6 +192,8 @@ Don't create backups and lockfiles
       "pb" 'project-list-buffers
       "ps" 'consult-ripgrep
       "p." 'project-async-shell-command
+      "s" '("search" . (keymap))
+      "ss" 'avy-goto-char-2
       "w" '("window" . (keymap))
       "w/" 'split-window-right
       "w-" 'split-window-below
@@ -257,7 +257,12 @@ Don't create backups and lockfiles
 
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package lsp-ui
+    :config
+    (setq lsp-ui-doc-enable t)
+    (setq lsp-ui-doc-show-with-cursor t)
+    (setq lsp-lens-enable t)
+    :commands lsp-ui-mode)
 #+end_src
 
 ** which-key
@@ -386,7 +391,10 @@ Steal the vterm toggle func from doom emacs
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vterm-toggle)
 #+end_src
-
+** Avy
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package avy)
+#+end_src
 * Custom functions
 #+begin_src emacs-lisp :tangle "init.el"
   ;; Custom functions 
