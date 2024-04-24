@@ -297,6 +297,7 @@ Don't create backups and lockfiles
   (use-package orderless
     :ensure t
     :custom
+    (orderless-matching-styles '(orderless-flex orderless-literal))
     (completion-styles '(orderless basic))
     (completion-category-overrides '((file (styles basic partial-completion)))))
 
