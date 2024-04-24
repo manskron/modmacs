@@ -245,8 +245,10 @@ Don't create backups and lockfiles
   (use-package lsp-mode
     :init
     (setq lsp-keymap-prefix "C-c l")
+    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
+    (add-to-list 'auto-mode-alist '("\\.stories.tsx\\'" . typescript-ts-mode))
     :hook (
-           (typescript-ts-mode . lsp)
+           (typescript-ts-base-mode . lsp)
            (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp)
 #+end_src
