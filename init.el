@@ -29,9 +29,6 @@
 
 (setq  inhibit-startup-message t)
 
-(set-face-attribute 'default nil
-                    :height 150)
-
 (setq custom-file (make-temp-file "emacs-custom-"))
 
 (setq make-backup-files nil)
@@ -54,6 +51,7 @@
 (setq use-package-always-ensure t)
 
 (use-package modus-themes)
+(use-package ef-themes)
 
 (use-package solar 
   :ensure nil
@@ -64,9 +62,13 @@
 (use-package circadian
   :after solar
   :config
-  (setq circadian-themes '((:sunrise . modus-operandi-tinted)
-                           (:sunset  . modus-vivendi-tinted)))
+  (setq circadian-themes '((:sunrise . ef-day)
+                           (:sunset  . ef-night)))
   (circadian-setup))
+
+(set-face-attribute 'default nil
+                    :height 150
+                    :family "JetbrainsMono Nerd Font")
 
 (use-package general
   :config
@@ -81,26 +83,43 @@
     :keymaps 'modmacs-prefix-map)
 
   (modmacs 
+    ;;Common
     "SPC" 'execute-extended-command
     "/" 'consult-line
     ";" 'vterm-toggle
+
+    ;;Config
     "," '("config" . (keymap))
-    ",c" 'open-config
-    ",r" 'reload-config
-    ",t" 'tangle-config
+    ",c" 'modmacs/open-config
+    ",r" 'modmacs/reload-config
+    ",t" 'modmacs/tangle-config
+
+    ;;Buffer
     "b" '("buffer" . (keymap))
     "bb" 'consult-buffer
     "bd" 'kill-this-buffer
     "be" 'eval-buffer
     "bi" 'ibuffer
+
+    ;;Code
     "c" '("code" . (keymap))
-    "cf" 'dom-indent-buffer
+    "cf" 'modmacs/indent-buffer
     "cx" 'consult-flymake
+
+    ;;File
     "f" '("file" . (keymap))
     "fr" 'recentf
     "fs" 'save-buffer
+
+    ;;Git
     "g" '("git" . (keymap))
     "gs" 'magit
+
+    ;;Help
+    "h" '("help" . (keymap))
+    "hf" 'modmacs/what-face
+
+    ;;Project
     "p" '("project" . (keymap))
     "pd" 'project-dired
     "pf" 'project-find-file
@@ -108,8 +127,16 @@
     "pb" 'project-list-buffers
     "ps" 'consult-ripgrep
     "p." 'project-async-shell-command
+
+    ;;Search
     "s" '("search" . (keymap))
     "ss" 'avy-goto-char-2
+
+    ;;Toggle
+    "s" '("toggle" . (keymap))
+    "tt" 'consult-theme
+
+    ;;Window
     "w" '("window" . (keymap))
     "w/" 'split-window-right
     "w-" 'split-window-below
@@ -121,6 +148,10 @@
     "wj" 'evil-window-down
     "wt" 'vterm-other-window
     ))
+
+(use-package avy)
+
+(use-package consult)
 
 (use-package dired
   :ensure nil
@@ -151,6 +182,43 @@
            "s" 'dired-do-async-shell-command
            ))
 
+(use-package embark
+  :ensure t
+
+  :bind
+  (("C-;" . embark-act)         ;; pick some comfortable binding
+   ("C-:" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :ensure t ; only need to install it, embark loads it after consult if found
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package evil
+  :config
+  (evil-set-initial-state 'eww-mode 'emacs)
+  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+  :init
+  (setq evil-want-C-i-jump nil)
+  :hook
+  ((prog-mode) . evil-mode)
+  )
+
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
@@ -168,27 +236,11 @@
   (setq lsp-lens-enable t)
   :commands lsp-ui-mode)
 
-(use-package which-key
-  :init
-  (setq which-key-idle-delay 0)
-  (which-key-mode)
-  :diminish which-key-mode)
-
-(use-package evil
-  :config
-  (evil-set-initial-state 'eww-mode 'emacs)
-  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
-  :init
-  (setq evil-want-C-i-jump nil)
-  :hook
-  ((prog-mode) . evil-mode)
-  )
-
 (use-package magit)
 
-(use-package nvm)
-
-(use-package prettier-js)
+(use-package marginalia
+  :init
+  (marginalia-mode))
 
 (use-package orderless
   :ensure t
@@ -196,65 +248,6 @@
   (orderless-matching-styles '(orderless-flex orderless-literal))
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
-
-(use-package consult
-  ;; Replace bindings. Lazily loaded due by `use-package'.
-  :bind (;; C-c bindings in `mode-specific-map'
-         ("C-c M-x" . consult-mode-command)
-         ("C-c h" . consult-history)
-         ("C-c k" . consult-kmacro)
-         ("C-c m" . consult-man)
-         ("C-c i" . consult-info)
-         ([remap Info-search] . consult-info)
-         ;; C-x bindings in `ctl-x-map'
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-         ;; Custom M-# bindings for fast register access
-         ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
-         ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-         ;; M-g bindings in `goto-map'
-         ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings in `search-map'
-         ("M-s d" . consult-find)
-         ("M-s D" . consult-locate)
-         ("M-s g" . consult-grep)
-         ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
-         ;; Isearch integration
-         ("M-s e" . consult-isearch-history)
-         :map isearch-mode-map
-         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-         ;; Minibuffer history
-         :map minibuffer-local-map
-         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
-  )
-
-(use-package marginalia
-  :init
-  (marginalia-mode))
 
 (use-package vertico
   :init
@@ -264,22 +257,36 @@
 
 (use-package vterm-toggle)
 
-(use-package avy)
+(use-package nvm)
+
+(use-package prettier-js)
+
+(use-package which-key
+  :init
+  (setq which-key-idle-delay 0)
+  (which-key-mode)
+  :diminish which-key-mode)
 
 ;; Custom functions 
-(defun open-config ()
+(defun modmacs/open-config ()
   "Opens my config."
   (interactive) (find-file "~/modmacs/modmacs.org"))
 
-(defun tangle-config ()
+(defun modmacs/tangle-config ()
   "Tangles my config."
   (interactive) (org-babel-tangle "~/modmacs/modmacs.org"))
 
-(defun reload-config ()
+(defun modmacs/reload-config ()
   "Reloads my config."
   (interactive) (load-file "~/modmacs/init.el"))
 
-(defun dom-indent-buffer ()
+(defun modmacs/what-face (pos)
+  (interactive "d")
+  (let ((face (or (get-char-property (point) 'read-face-name)
+                  (get-char-property (point) 'face))))
+    (if face (message "Face: %s" face) (message "No face at %d" pos))))
+
+(defun modmacs/indent-buffer ()
   (interactive)
   (save-excursion
     (indent-region (point-min) (point-max) nil)))

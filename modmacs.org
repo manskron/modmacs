@@ -13,8 +13,8 @@ count of {{{word-count}}}.*
 + Website: <https://mans.computer>
 + Git repositories:
   - GitHub: <https://github.com/manskron/modmacs>
-    
-* Emacs settings
+
+* Emacs native settings
 
 Hide scroll bar, tool bar and menu bar. Don't do this if you are new to emacs.
 It is a fantastic way to discover functionality and keybindings.
@@ -90,12 +90,6 @@ Start with a scratch buffer
   (setq  inhibit-startup-message t)
 #+end_src
 
-Font size
-#+begin_src emacs-lisp :tangle "init.el"
-  (set-face-attribute 'default nil
-                      :height 150)
-#+end_src
-
 Send custom.el to oblivion
 #+begin_src emacs-lisp :tangle "init.el"
   (setq custom-file (make-temp-file "emacs-custom-"))
@@ -107,7 +101,8 @@ Don't create backups and lockfiles
   (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
   (setq create-lockfiles nil)
 #+end_src
-* Package init
+
+* use-package init
 
 #+begin_src emacs-lisp :tangle "init.el"
   (require 'package)
@@ -130,6 +125,7 @@ Don't create backups and lockfiles
 
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package modus-themes)
+  (use-package ef-themes)
 #+end_src
 
 #+begin_src emacs-lisp :tangle "init.el"
@@ -144,13 +140,21 @@ Don't create backups and lockfiles
   (use-package circadian
     :after solar
     :config
-    (setq circadian-themes '((:sunrise . modus-operandi-tinted)
-                             (:sunset  . modus-vivendi-tinted)))
+    (setq circadian-themes '((:sunrise . ef-day)
+                             (:sunset  . ef-night)))
     (circadian-setup))
 #+end_src
 
-* Keybindings
+* Fonts
 
+Default faces
+#+begin_src emacs-lisp :tangle "init.el"
+  (set-face-attribute 'default nil
+                      :height 150
+                      :family "JetbrainsMono Nerd Font")
+#+end_src
+
+* Keybindings
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package general
     :config
@@ -165,26 +169,43 @@ Don't create backups and lockfiles
       :keymaps 'modmacs-prefix-map)
 
     (modmacs 
+      ;;Common
       "SPC" 'execute-extended-command
       "/" 'consult-line
       ";" 'vterm-toggle
+
+      ;;Config
       "," '("config" . (keymap))
-      ",c" 'open-config
-      ",r" 'reload-config
-      ",t" 'tangle-config
+      ",c" 'modmacs/open-config
+      ",r" 'modmacs/reload-config
+      ",t" 'modmacs/tangle-config
+
+      ;;Buffer
       "b" '("buffer" . (keymap))
       "bb" 'consult-buffer
       "bd" 'kill-this-buffer
       "be" 'eval-buffer
       "bi" 'ibuffer
+
+      ;;Code
       "c" '("code" . (keymap))
-      "cf" 'dom-indent-buffer
+      "cf" 'modmacs/indent-buffer
       "cx" 'consult-flymake
+
+      ;;File
       "f" '("file" . (keymap))
       "fr" 'recentf
       "fs" 'save-buffer
+
+      ;;Git
       "g" '("git" . (keymap))
       "gs" 'magit
+
+      ;;Help
+      "h" '("help" . (keymap))
+      "hf" 'modmacs/what-face
+
+      ;;Project
       "p" '("project" . (keymap))
       "pd" 'project-dired
       "pf" 'project-find-file
@@ -192,8 +213,16 @@ Don't create backups and lockfiles
       "pb" 'project-list-buffers
       "ps" 'consult-ripgrep
       "p." 'project-async-shell-command
+
+      ;;Search
       "s" '("search" . (keymap))
       "ss" 'avy-goto-char-2
+
+      ;;Toggle
+      "s" '("toggle" . (keymap))
+      "tt" 'consult-theme
+
+      ;;Window
       "w" '("window" . (keymap))
       "w/" 'split-window-right
       "w-" 'split-window-below
@@ -208,6 +237,16 @@ Don't create backups and lockfiles
 #+end_src
 
 * Packages
+** Avy
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package avy)
+#+end_src
+
+** Consult
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package consult)
+#+end_src
+
 ** Dired
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package dired
@@ -240,6 +279,49 @@ Don't create backups and lockfiles
              ))
 #+end_src
 
+** Embark
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package embark
+    :ensure t
+
+    :bind
+    (("C-;" . embark-act)         ;; pick some comfortable binding
+     ("C-:" . embark-dwim)        ;; good alternative: M-.
+     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+    :init
+
+    ;; Optionally replace the key help with a completing-read interface
+    (setq prefix-help-command #'embark-prefix-help-command)
+
+    :config
+
+    ;; Hide the mode line of the Embark live/completions buffers
+    (add-to-list 'display-buffer-alist
+                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                   nil
+                   (window-parameters (mode-line-format . none)))))
+
+  ;; Consult users will also want the embark-consult package.
+  (use-package embark-consult
+    :ensure t ; only need to install it, embark loads it after consult if found
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
+
+** Evil
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package evil
+    :config
+    (evil-set-initial-state 'eww-mode 'emacs)
+    (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+    :init
+    (setq evil-want-C-i-jump nil)
+    :hook
+    ((prog-mode) . evil-mode)
+    )
+#+end_src
+
 ** LSP
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package lsp-mode
@@ -265,40 +347,18 @@ Don't create backups and lockfiles
     :commands lsp-ui-mode)
 #+end_src
 
-** which-key
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package which-key
-    :init
-    (setq which-key-idle-delay 0)
-    (which-key-mode)
-    :diminish which-key-mode)
-#+end_src
-
-** Evil
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package evil
-    :config
-    (evil-set-initial-state 'eww-mode 'emacs)
-    (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
-    :init
-    (setq evil-want-C-i-jump nil)
-    :hook
-    ((prog-mode) . evil-mode)
-    )
-#+end_src
 ** Magit
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package magit)
 #+end_src
-** Web Dev
-*** Nvm
+
+** Marginalia
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package nvm)
+  (use-package marginalia
+    :init
+    (marginalia-mode))
 #+end_src
-*** Prettier
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package prettier-js)
-#+end_src
+
 ** Orderless
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package orderless
@@ -308,71 +368,6 @@ Don't create backups and lockfiles
     (completion-styles '(orderless basic))
     (completion-category-overrides '((file (styles basic partial-completion)))))
 
-#+end_src
-
-** Consult
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package consult
-    ;; Replace bindings. Lazily loaded due by `use-package'.
-    :bind (;; C-c bindings in `mode-specific-map'
-           ("C-c M-x" . consult-mode-command)
-           ("C-c h" . consult-history)
-           ("C-c k" . consult-kmacro)
-           ("C-c m" . consult-man)
-           ("C-c i" . consult-info)
-           ([remap Info-search] . consult-info)
-           ;; C-x bindings in `ctl-x-map'
-           ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-           ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-           ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-           ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-           ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-           ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-           ;; Custom M-# bindings for fast register access
-           ("M-#" . consult-register-load)
-           ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-           ("C-M-#" . consult-register)
-           ;; Other custom bindings
-           ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-           ;; M-g bindings in `goto-map'
-           ("M-g e" . consult-compile-error)
-           ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-           ("M-g g" . consult-goto-line)             ;; orig. goto-line
-           ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-           ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-           ("M-g m" . consult-mark)
-           ("M-g k" . consult-global-mark)
-           ("M-g i" . consult-imenu)
-           ("M-g I" . consult-imenu-multi)
-           ;; M-s bindings in `search-map'
-           ("M-s d" . consult-find)
-           ("M-s D" . consult-locate)
-           ("M-s g" . consult-grep)
-           ("M-s G" . consult-git-grep)
-           ("M-s r" . consult-ripgrep)
-           ("M-s l" . consult-line)
-           ("M-s L" . consult-line-multi)
-           ("M-s k" . consult-keep-lines)
-           ("M-s u" . consult-focus-lines)
-           ;; Isearch integration
-           ("M-s e" . consult-isearch-history)
-           :map isearch-mode-map
-           ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-           ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-           ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-           ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-           ;; Minibuffer history
-           :map minibuffer-local-map
-           ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-           ("M-r" . consult-history))                ;; orig. previous-matching-history-element
-    )
-#+end_src
-
-** Marginalia
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package marginalia
-    :init
-    (marginalia-mode))
 #+end_src
 
 ** Vertico
@@ -391,26 +386,43 @@ Steal the vterm toggle func from doom emacs
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vterm-toggle)
 #+end_src
-** Avy
+
+** Web Dev
+*** Nvm
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package avy)
+  (use-package nvm)
 #+end_src
+
+*** Prettier
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package prettier-js)
+#+end_src
+
+** which-key
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package which-key
+    :init
+    (setq which-key-idle-delay 0)
+    (which-key-mode)
+    :diminish which-key-mode)
+#+end_src
+
 * Custom functions
 #+begin_src emacs-lisp :tangle "init.el"
   ;; Custom functions 
-  (defun open-config ()
+  (defun modmacs/open-config ()
     "Opens my config."
     (interactive) (find-file "~/modmacs/modmacs.org"))
 
-  (defun tangle-config ()
+  (defun modmacs/tangle-config ()
     "Tangles my config."
     (interactive) (org-babel-tangle "~/modmacs/modmacs.org"))
 
-  (defun reload-config ()
+  (defun modmacs/reload-config ()
     "Reloads my config."
     (interactive) (load-file "~/modmacs/init.el"))
 
-  (defun dom-indent-buffer ()
+  (defun modmacs/indent-buffer ()
     (interactive)
     (save-excursion
       (indent-region (point-min) (point-max) nil)))
