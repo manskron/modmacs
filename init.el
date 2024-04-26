@@ -1,54 +1,74 @@
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+(setq
+ modmacs/font-size 15
+ modmacs/font-family "JetbrainsMono Nerd Font"
+ )
 
-(hl-line-mode t)
+(use-package emacs
+  :init
 
-(global-display-line-numbers-mode -1)
+  ;;Hide scroll bar, tool bar and menu bar. Don't do this if you are new to emacs.
+  ;;It is a fantastic way to discover functionality and keybindings.
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
 
-(global-auto-revert-mode 1)
+  ;;Start in fullscreen
+  (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
 
-(recentf-mode 1)
+  :custom
 
-(save-place-mode 1)
+  (package-archives
+   '(("melpa" . "https://melpa.org/packages/")
+     ("melpa-stable" . "https://stable.melpa.org/packages/")
+     ("org" . "https://orgmode.org/elpa/")
+     ("elpa" . "https://elpa.gnu.org/packages/")))
 
-(add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+  ;;Highlight the active line.
+  (hl-line-mode t)
 
-(display-time-mode 1)
-(format-time-string "%H:%M")
+  ;;Hide line numbers. These are mostly only needed when pair programming.
+  (global-display-line-numbers-mode -1)
 
-(show-paren-mode 1)
+  ;;Refresh buffer if the underlying file changes.
+  (global-auto-revert-mode 1)
 
-(fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
+  ;;Enable recent files
+  (recentf-mode 1)
 
-(setq vc-follow-symlinks t)
+  ;;Restore last cursor location in previously opened files
+  (save-place-mode 1)
 
-(setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
+  ;;Display time the way I like it.
+  (display-time-mode 1)
+  (format-time-string "%H:%M")
 
-(setq  global-auto-revert-non-file-buffers t)
+  ;;Hightlight matching parens
+  (show-paren-mode 1)
 
-(setq  inhibit-startup-message t)
+  ;;Make confirmation prompts comfortable
+  (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
 
-(setq custom-file (make-temp-file "emacs-custom-"))
+  ;; Follow symlinks
+  (vc-follow-symlinks t)
 
-(setq make-backup-files nil)
-(setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
-(setq create-lockfiles nil)
+  ;;Refresh dired when files change
+  (global-auto-revert-non-file-buffers t)
 
-(require 'package)
+  ;;Start with a scratch buffer
+  (inhibit-startup-message t)
 
-(setq package-archives
-      '(("melpa" . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")
-        ("org" . "https://orgmode.org/elpa/")
-        ("elpa" . "https://elpa.gnu.org/packages/")))
+  ;; Send custom.el to oblivion
+  (custom-file (make-temp-file "emacs-custom-"))
 
-(package-initialize)
+  ;;Don't create backups and lockfiles
+  (make-backup-files nil)
+  (backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
+  (create-lockfiles nil)
 
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t)
+  ;;Allow eldoc to resize
+  (eldoc-echo-area-use-multiline-p t)
+
+  )
 
 (use-package modus-themes)
 (use-package ef-themes)
@@ -60,15 +80,16 @@
         calendar-longitude 18.06))
 
 (use-package circadian
-  :after solar
+  :after solar 
   :config
-  (setq circadian-themes '((:sunrise . ef-day)
-                           (:sunset  . ef-night)))
+  (setq circadian-themes '((:sunrise . ef-summer)
+                           (:sunset  . ef-bio)))
   (circadian-setup))
 
 (set-face-attribute 'default nil
-                    :height 150
-                    :family "JetbrainsMono Nerd Font")
+                    :height (* modmacs/font-size 10)
+                    :family modmacs/font-family
+                    )
 
 (use-package general
   :config
@@ -79,10 +100,10 @@
    :non-normal-prefix "M-SPC"
    :prefix "SPC")
 
-  (general-create-definer modmacs 
+  (general-create-definer modmacs-definer 
     :keymaps 'modmacs-prefix-map)
 
-  (modmacs 
+  (modmacs-definer
     ;;Common
     "SPC" 'execute-extended-command
     "/" 'consult-line
@@ -103,6 +124,7 @@
 
     ;;Code
     "c" '("code" . (keymap))
+    "cd" 'lsp-ui-doc-show
     "cf" 'modmacs/indent-buffer
     "cx" 'consult-flymake
 
@@ -133,7 +155,7 @@
     "ss" 'avy-goto-char-2
 
     ;;Toggle
-    "s" '("toggle" . (keymap))
+    "t" '("toggle" . (keymap))
     "tt" 'consult-theme
 
     ;;Window
@@ -152,6 +174,13 @@
 (use-package avy)
 
 (use-package consult)
+
+(use-package corfu
+  :init 
+  (global-corfu-mode)
+  :custom
+  (corfu-auto t)
+  )
 
 (use-package dired
   :ensure nil
@@ -224,6 +253,10 @@
   (setq lsp-keymap-prefix "C-c l")
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.stories.tsx\\'" . typescript-ts-mode))
+  :custom
+  ;;Point to tree-sitter grammars
+  (treesit-extra-load-path '("~/tree-sitter-module/dist"))
+
   :hook (
          (typescript-ts-base-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
@@ -231,8 +264,6 @@
 
 (use-package lsp-ui
   :config
-  (setq lsp-ui-doc-enable t)
-  (setq lsp-ui-doc-show-with-cursor t)
   (setq lsp-lens-enable t)
   :commands lsp-ui-mode)
 
@@ -245,7 +276,6 @@
 (use-package orderless
   :ensure t
   :custom
-  (orderless-matching-styles '(orderless-flex orderless-literal))
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
@@ -274,17 +304,12 @@
 
 (defun modmacs/tangle-config ()
   "Tangles my config."
-  (interactive) (org-babel-tangle "~/modmacs/modmacs.org"))
+  (interactive)
+  (org-babel-tangle "~/modmacs/modmacs.org"))
 
 (defun modmacs/reload-config ()
   "Reloads my config."
   (interactive) (load-file "~/modmacs/init.el"))
-
-(defun modmacs/what-face (pos)
-  (interactive "d")
-  (let ((face (or (get-char-property (point) 'read-face-name)
-                  (get-char-property (point) 'face))))
-    (if face (message "Face: %s" face) (message "No face at %d" pos))))
 
 (defun modmacs/indent-buffer ()
   (interactive)

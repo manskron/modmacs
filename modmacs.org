@@ -14,111 +14,83 @@ count of {{{word-count}}}.*
 + Git repositories:
   - GitHub: <https://github.com/manskron/modmacs>
 
+* Config settings
+Some variables for quick access.
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq
+   modmacs/font-size 15
+   modmacs/font-family "JetbrainsMono Nerd Font"
+   )
+#+end_src
 * Emacs native settings
 
-Hide scroll bar, tool bar and menu bar. Don't do this if you are new to emacs.
-It is a fantastic way to discover functionality and keybindings.
 #+begin_src emacs-lisp :tangle "init.el"
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-#+end_src
+  (use-package emacs
+    :init
 
-Highlight the active line.
-#+begin_src emacs-lisp :tangle "init.el"
-  (hl-line-mode t)
-#+end_src
+    ;;Hide scroll bar, tool bar and menu bar. Don't do this if you are new to emacs.
+    ;;It is a fantastic way to discover functionality and keybindings.
+    (menu-bar-mode -1)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)
 
-Hide line numbers. These are mostly only needed when pair programming.
-#+begin_src emacs-lisp :tangle "init.el"
-  (global-display-line-numbers-mode -1)
-#+end_src
+    ;;Start in fullscreen
+    (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
 
-Refresh buffer if the underlying file changes.
-#+begin_src emacs-lisp :tangle "init.el"
-  (global-auto-revert-mode 1)
-#+end_src
+    :custom
 
-Enable recent files
-#+begin_src emacs-lisp :tangle "init.el"
-  (recentf-mode 1)
-#+end_src
+    (package-archives
+     '(("melpa" . "https://melpa.org/packages/")
+       ("melpa-stable" . "https://stable.melpa.org/packages/")
+       ("org" . "https://orgmode.org/elpa/")
+       ("elpa" . "https://elpa.gnu.org/packages/")))
 
-Restore last cursor location in previously opened files
-#+begin_src emacs-lisp :tangle "init.el"
-  (save-place-mode 1)
-#+end_src
+    ;;Highlight the active line.
+    (hl-line-mode t)
 
-Start in fullscreen
-#+begin_src emacs-lisp :tangle "init.el"
-  (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
-#+end_src
+    ;;Hide line numbers. These are mostly only needed when pair programming.
+    (global-display-line-numbers-mode -1)
 
-Display time the way I like it.
-#+begin_src emacs-lisp :tangle "init.el"
-  (display-time-mode 1)
-  (format-time-string "%H:%M")
-#+end_src
+    ;;Refresh buffer if the underlying file changes.
+    (global-auto-revert-mode 1)
 
-Hightlight matching parens
-#+begin_src emacs-lisp :tangle "init.el"
-  (show-paren-mode 1)
-#+end_src
+    ;;Enable recent files
+    (recentf-mode 1)
 
-Make confirmation prompts comfortable
-#+begin_src emacs-lisp :tangle "init.el"
-  (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
-#+end_src
+    ;;Restore last cursor location in previously opened files
+    (save-place-mode 1)
 
-Follow symlinks
-#+begin_src emacs-lisp :tangle "init.el"
-  (setq vc-follow-symlinks t)
-#+end_src
+    ;;Display time the way I like it.
+    (display-time-mode 1)
+    (format-time-string "%H:%M")
 
-Point to tree-sitter grammars
-#+begin_src emacs-lisp :tangle "init.el"
-  (setq treesit-extra-load-path '("~/tree-sitter-module/dist"))
-#+end_src
+    ;;Hightlight matching parens
+    (show-paren-mode 1)
 
-Refresh dired when files change
-#+begin_src emacs-lisp :tangle "init.el"
-  (setq  global-auto-revert-non-file-buffers t)
-#+end_src
+    ;;Make confirmation prompts comfortable
+    (fset 'yes-or-no-p 'y-or-n-p) ; y-or-n-p makes answering questions faster
 
-Start with a scratch buffer
-#+begin_src emacs-lisp :tangle "init.el"
-  (setq  inhibit-startup-message t)
-#+end_src
+    ;; Follow symlinks
+    (vc-follow-symlinks t)
 
-Send custom.el to oblivion
-#+begin_src emacs-lisp :tangle "init.el"
-  (setq custom-file (make-temp-file "emacs-custom-"))
-#+end_src
+    ;;Refresh dired when files change
+    (global-auto-revert-non-file-buffers t)
 
-Don't create backups and lockfiles
-#+begin_src emacs-lisp :tangle "init.el"
-  (setq make-backup-files nil)
-  (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
-  (setq create-lockfiles nil)
-#+end_src
+    ;;Start with a scratch buffer
+    (inhibit-startup-message t)
 
-* use-package init
+    ;; Send custom.el to oblivion
+    (custom-file (make-temp-file "emacs-custom-"))
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (require 'package)
+    ;;Don't create backups and lockfiles
+    (make-backup-files nil)
+    (backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
+    (create-lockfiles nil)
 
-  (setq package-archives
-        '(("melpa" . "https://melpa.org/packages/")
-          ("melpa-stable" . "https://stable.melpa.org/packages/")
-          ("org" . "https://orgmode.org/elpa/")
-          ("elpa" . "https://elpa.gnu.org/packages/")))
+    ;;Allow eldoc to resize
+    (eldoc-echo-area-use-multiline-p t)
 
-  (package-initialize)
-
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-  (require 'use-package)
-  (setq use-package-always-ensure t)
+    )
 #+end_src
 
 * Theme
@@ -138,10 +110,10 @@ Don't create backups and lockfiles
 
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package circadian
-    :after solar
+    :after solar 
     :config
-    (setq circadian-themes '((:sunrise . ef-day)
-                             (:sunset  . ef-night)))
+    (setq circadian-themes '((:sunrise . ef-summer)
+                             (:sunset  . ef-bio)))
     (circadian-setup))
 #+end_src
 
@@ -150,8 +122,9 @@ Don't create backups and lockfiles
 Default faces
 #+begin_src emacs-lisp :tangle "init.el"
   (set-face-attribute 'default nil
-                      :height 150
-                      :family "JetbrainsMono Nerd Font")
+                      :height (* modmacs/font-size 10)
+                      :family modmacs/font-family
+                      )
 #+end_src
 
 * Keybindings
@@ -165,10 +138,10 @@ Default faces
      :non-normal-prefix "M-SPC"
      :prefix "SPC")
 
-    (general-create-definer modmacs 
+    (general-create-definer modmacs-definer 
       :keymaps 'modmacs-prefix-map)
 
-    (modmacs 
+    (modmacs-definer
       ;;Common
       "SPC" 'execute-extended-command
       "/" 'consult-line
@@ -189,6 +162,7 @@ Default faces
 
       ;;Code
       "c" '("code" . (keymap))
+      "cd" 'lsp-ui-doc-show
       "cf" 'modmacs/indent-buffer
       "cx" 'consult-flymake
 
@@ -219,7 +193,7 @@ Default faces
       "ss" 'avy-goto-char-2
 
       ;;Toggle
-      "s" '("toggle" . (keymap))
+      "t" '("toggle" . (keymap))
       "tt" 'consult-theme
 
       ;;Window
@@ -245,6 +219,16 @@ Default faces
 ** Consult
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package consult)
+#+end_src
+
+** Corfu
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package corfu
+    :init 
+    (global-corfu-mode)
+    :custom
+    (corfu-auto t)
+    )
 #+end_src
 
 ** Dired
@@ -329,6 +313,10 @@ Default faces
     (setq lsp-keymap-prefix "C-c l")
     (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.stories.tsx\\'" . typescript-ts-mode))
+    :custom
+    ;;Point to tree-sitter grammars
+    (treesit-extra-load-path '("~/tree-sitter-module/dist"))
+
     :hook (
            (typescript-ts-base-mode . lsp)
            (lsp-mode . lsp-enable-which-key-integration))
@@ -341,8 +329,6 @@ Default faces
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package lsp-ui
     :config
-    (setq lsp-ui-doc-enable t)
-    (setq lsp-ui-doc-show-with-cursor t)
     (setq lsp-lens-enable t)
     :commands lsp-ui-mode)
 #+end_src
@@ -364,7 +350,6 @@ Default faces
   (use-package orderless
     :ensure t
     :custom
-    (orderless-matching-styles '(orderless-flex orderless-literal))
     (completion-styles '(orderless basic))
     (completion-category-overrides '((file (styles basic partial-completion)))))
 
@@ -416,7 +401,8 @@ Steal the vterm toggle func from doom emacs
 
   (defun modmacs/tangle-config ()
     "Tangles my config."
-    (interactive) (org-babel-tangle "~/modmacs/modmacs.org"))
+    (interactive)
+    (org-babel-tangle "~/modmacs/modmacs.org"))
 
   (defun modmacs/reload-config ()
     "Reloads my config."
